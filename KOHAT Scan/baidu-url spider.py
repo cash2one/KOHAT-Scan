@@ -6,7 +6,8 @@ import thread
 import time
 from multiprocessing import Pool
 import datetime
-path=r"C:\Users\chen1\Desktop\url coleection "+str(datetime.datetime.now())[:19].replace(':','-')+'.txt'
+import os
+path=r"C:\Users\chen1\Desktop\url coleection "+str(datetime.datetime.now())[:19].replace(':','-')+".md"
 #set urllib2 op
 send_headers = {
  'User-Agent':'Mozilla/5.0 (Windows NT 6.2; rv:16.0) Gecko/20100101 Firefox/16.0',
@@ -74,6 +75,7 @@ def threadingpool(words,ints):
         '''result.append(thread.start_new_thread(geteachpageurl,(word,i)))'''
         t=threading.Thread(target = geteachpageurl, args = (word,i), name = 'spider' + str(i))
         t.start()
+        time.sleep(1)
     print 'all start'
 
 def processpool(words,ints):
@@ -83,7 +85,6 @@ def processpool(words,ints):
     pool = Pool(10)#warning 别开太多进程不然百度认为你攻击呢 然后就断你连接
     for i in pagenumber[:int(ints)]:
         result.append(pool.apply(geteachpageurl,(word,i)))
-        time.sleep(1)
     pool.close()
     pool.join()
     print result
@@ -92,8 +93,23 @@ def processpool(words,ints):
 if __name__ == '__main__':
     '''whitelist=['http://v.baidu.com/link']'''
     word = raw_input('keyword is:')
-    ints = raw_input("how many page(75 was max):")
+    ints = raw_input("how many page do you want(75 was max):")
     '''processpool(word,ints)'''
     threadingpool(word,ints)
+    while  True:
+       if os.path.exists(path)==True:
+       	   print "filters is runing ,it will finish in 60 seconds "
+           time.sleep(int(ints)+30)
+           f = open(path,'r+')
+           fread=f.readlines()
+           f.close()
+           rewrite=open(path,'w+')
+           rewrite.writelines([lines[:-1]+'\n' for lines in list(set(fread))])
+           rewrite.close()
+           break
+       else:
+           print "Waiting..........."
+           time.sleep(10)
 
 """multiprocess.dummy.pool.map"""
+#2016年6月24日 21:25:42 注 本地修改url 即本地文件filter
