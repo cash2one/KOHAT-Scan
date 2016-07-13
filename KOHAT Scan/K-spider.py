@@ -7,53 +7,38 @@ import time
 from multiprocessing import Pool
 import os,sys
 import os.path
-
-'''0x01
-获取页面下的任何url(可以用正则表达式匹配页面下的地址)
-0x02
-判断该url是否属于本域名下 并且判断是否已有爬取记录(还是用正则)
-0x03
-判断是否已经抓取
-
-0x04
-这里是对前几步的加以叙述 因为我们要进行批量扫描站点所以我们采用的方法是|多进程+多线程|
-线程和进程的同步可能比较麻烦 但是可以试着用中间文件过渡 (但记得去掉重复的 这一步可以不做如果0x02做的好的话)  然后Scan重读取中间过渡文件 然后将获取到的内容提交到主动扫描模块
-0x05
-虽然这说的是页面爬行但也要知道 将不同的url分配到不同的主动扫描模块
-例如页面中有 表格 后缀为.shtm ;.html ;.htm 应该提交到主动扫描的 sql injection
-0x06
-补充 在使用多线程的时候要记得用线程队列 Queue 
-0x07
-既然已经抓取到这些没有重复的Url了 那么下一步要做的就是分析Url 这里和0X05讲到的有所相似
-但是我们不仅要判断页面的后缀并且要识别那些以PHP ASP ASPX JSP等结尾的页面是否要提交到XSS
-或者要不要提交到SQL 还是XPATH等
-0x08
-既然我们都抓取到了这么多站点下的URL那么我要知道此URL是否是越权访问了某些我本身不能看的内容
-我们可以捕获页面的标枪 匹配页面的关键内容 关键的是有关键词字典
-0x09
-0x10
-
+import Queue
+'''
+详细叙述
+关于站点spider自定义函数部件
+一 获取本地baidu spider搜索结果
+二 建立单独进程获取目标网站的页面(记得限定进程数不然电脑炸了 多进程好像可以不上锁 但我会在每个线程下建立多个线程进行获取这时候多线程就要上队列同步了)
+三 既然站点页面都抓取了那么就要存放记录 放入result和information文件夹 应该每个站点爬行结果都新建个文件夹来存放以便记录
+四 将获取的Url分配到各个子攻击模块(关于分配原则就后续加入)
+五 此模块是用来判断页面是否为越权访问或者是信息泄露 但我觉得这应该是能一起判断的 我选择调用tester文件来检测
+六 多线程或多线程 执行
+七 filter
 '''
 send_headers = {
- 'User-Agent':'Mozilla/5.0 (Windows NT 6.2; rv:16.0) Gecko/20100101 Firefox/16.0',
+ 'User-Agent':'Mozilla/5.0 (Windows NT 6.2; rv:16.0) Gecko/20160101 Firefox/16.0',
  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
  'Connection':'keep-alive'
 }
 
 
 def local_url_get():#获取本地BAIDU-URL SPIDER抓取到的搜索结果的Url
+#[a-zA-z]+://[^/]* 获取地址前部分 到.com .cn 之前的部分
 	path = os.path.abspath(sys.argv[0])#(获取本地地址)
 	filelist = glob.glob(str(path)[:-11]+'scan report\*.md')
-	local_file_list=[]
 	for item in filelist:
-		for each_one in(open(item,'r').readlines()):
-			local_file_list.append(each_one.strip())
 		try:
+			files=open(item,'r').readlines()
+			URLINEED=re.findall('[a-zA-z]+://[^/]*',files)
 			os.remove(item)
 		except:
-			pass
-	return local_file_list
-	
+			print 'local_url_get Eorro'
+	return list(set(URLINEED))
+
 def get_page_url(Url):#获取页面内的所有活的Url
 	'''[a-zA-z]+://[^"]* 此正则可以匹配任何处于页面下的Url'''
 	Req = urllib2.Request(Url)
@@ -64,17 +49,93 @@ def get_page_url(Url):#获取页面内的所有活的Url
 		DOM=Page.raed()
 		all_page_url = list(set(re.findall('[a-zA-z]+://[^"]*',DOM)))#顺便去掉重复的Url
 		#判断是否匹配到非Url的东西
-		for each_all_page_url in all_page_url:
-			try:
-				if urllib2.urlopen(urllib2.Request(each_all_page_url,headers=send_headers)).code==200:
-					URLlist.append(each_all_page_url)
-			except Exception,e:
-				pass
-	return URLlist
+        for each_one in all_page_url:
+            if urllib2.urlopen(urllib2.Request(each_one))==200:#除去一些非URL的元素
+                URLlist.append(each_one)
+        path = os.path.abspath(sys.argv[0])[:-11]
+		for each_all_page_url in all_page_url:#将获取到的URL写入到result中
+            try:
+                if os.path.exists(str(path+each_all_page_url))==True:
+                    pass
+                else:
+                    os.mkdir(str(path)+'\scan report'+'\\'+str(each_all_page_url))
+                files=open(str(path+"\scan report"+'\\'+each_all_page_url)+str('\Url report.md'),'w+')
+                for URLX in URLlist:
+                    files.writelines(str(URLX)+'\n')
+                files.close()
+            except Exception,e:
+                print 'Eorro',e
 
-def get_page_dom(URLlist):#判断页面内是否含有关键内容 关于越权访问之类的
-	for eachurl in URLlist:
+        return URLlist
 
 
-def find_Script_format(URLlist):#判断URL类型的sql 还有获取有forms的页面
-	scriptlist=["?","php","asp","aspx","html","shtml","htm"]
+def find_Script_type(URLlist):#判断URL类型 决定sql 注入方式 
+	scriptlist=[".php",".asp",".aspx",".html",".shtml",".htm"]
+	phplist=[]
+	asplist=[]
+	aspxlist=[]
+	htmllist=[]
+	shtmllist=[]
+	htmlist=[]
+	for formsURL in URLlist:#判断脚本类型 不同的脚本对于的查询方式有差别 比如伪静态是*****.htm 动态是?=****  我星号就代替语句啦:)
+		if formsURL.find('.php')==True:
+			phplist.append(formsURL)
+		else:
+			pass
+		if formsURL.find('.asp')==True:
+			asplist.append(formsURL)
+		else:
+			pass
+		if formsURL.find('.aspx')==True:
+			aspxlist.append(formsURL)
+		else:
+			pass
+		if formsURL.find('.html')==True:
+			htmllist.append(formsURL)
+		else:
+			pass
+		if formsURL.find('shtml')==True:
+			shtmllist.append(formsURL)
+		else:
+			pass
+		if formsURL.find('htm')==True:
+			htmlist.append(formsURL)
+		else:
+			pass
+	return phplist,asplist,aspxlist,htmllist,shtmllist,htmlist
+
+def find_the_forms(URLlist):#获取html中的表单 根据html的form来跟踪表达
+'''    url = "http://xxxxxx/opac_two/search2/searchout.jsp"
+    search = urllib.urlencode( [('suchen_type', '1'), ('suchen_word', a.encode('gb18030')),
+            ('suchen_match', 'qx'), ('recordtype', 'all'), ('library_id', 'all'),('show_type','wenzi')])
+        req = urllib2.Request(url)
+        fd = urllib2.urlopen(req, search).read()
+        html = fd.decode('gb18030').encode('utf-8')   这个有点麻烦 我就先写threadingpool'''
+
+
+	for each_url in URLlist:
+		dom = urllib2.urlopen(urllib2.Request(each_url))
+		re_forms = re.findall(dom,'')
+
+		post_form = urllib2.urlopen(urllib2.Request(),)
+
+
+
+#将每一个站点的搜索分给线程 所以要将local_url_get()的内容传递给 多进程让多进程再将任务具体到多线程 提高效率
+def threadingpool(URLlist):#队列锁 记得上 多线程一定要不然会写入错误  多进程可以不用
+    Q = Queue.Queue(250)
+    
+    for i in :
+        t=threading.Thread(target = get_page_url, args = (URLlist), name = 'spider' + str(i))
+        t.start()
+
+
+
+def multiprocessingpool(URLlist):
+
+
+
+
+if __name__ == '__main__':
+    keywordlist=[]
+    URLlist=get_page_url()
