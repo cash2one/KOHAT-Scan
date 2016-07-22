@@ -15,6 +15,7 @@ send_headers = {
  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
  'Connection':'keep-alive'
 }
+
 q=Queue.Queue()
 Q=Queue.Queue()
 def local_url_get():#获取本地BAIDU-URL SPIDER抓取到的搜索结果的Url
@@ -71,8 +72,6 @@ def get_page_url(Url,Nones):#获取页面内的所有活的Url
     		try:
     			for fliter in a.split("'"):
     				if not re.match('[a-zA-z]+://[^"]*',a)==None:
-    					#看出错误匹配的 那些连标枪也匹配进来的 一般是以'为结尾的会匹配错误所以 从'来切开每一个错误匹配内容
-    					#在从中遍历每一个元素 看那些元素是Url 但是无论如何都是要把元素删了再加 测试完毕OK没事 小心列表长度缺失会有个很麻烦的问题 所以还是有减有加保持长度好
     					fliters.remove(a)
     					fliters.append(fliter)
     				else:
@@ -98,7 +97,7 @@ def get_page_url(Url,Nones):#获取页面内的所有活的Url
     	except Exception, e:
     		pass
 
-    	print list(set(all_page_url))
+    	
 
 
     	try:
@@ -109,7 +108,7 @@ def get_page_url(Url,Nones):#获取页面内的所有活的Url
     				fliters.append(all_page_url[e])
     	except Exception, e:
     		pass
-        print list(set(fliters))
+        
 
     	try:
     		for h in list(set(fliters)):
@@ -178,11 +177,12 @@ def find_the_forms(URLlist):#获取html中的表单 根据html的form来跟踪�
 
 def  threadingpoools(into_url):
 	first_url_list=into_url
-	thread=[threading.Thread(target=get_page_url,args=(urls,None)) for urls in first_url_list]
-	for t in thread:
-		t.start()
-#差集并集算法爬行即可
-
+	if len(first_url_list)>0:
+		thread=[threading.Thread(target=get_page_url,args=(urls,'Thread-1')) for urls in first_url_list]
+		for t in thread:
+			t.start()
+	else:
+		pass
 
 
 def multiprocessingpool(URLlist):
@@ -218,29 +218,27 @@ def run(domainurl):
 	result2=[]
 	differences=[]
 	origin = list(set(threading.enumerate()))
-	threadingpoools(list(domainurl))
+	threadingpoools(domainurl)
 	time.sleep(2)
+	time.clock()
 	#所有线程都完成后也要等q和Q空了后才能退出 这意味着要3个都是false才能退出 有一个true就得进行
-	while not list(set(threading.enumerate()))==origin or not q.empty() or not Q.empty():
+	while  not q.empty() or not Q.empty():#not list(set(threading.enumerate()))==origin or
+		time.sleep(0.2)
 		differences.append(Q.get())
-		different=list(set(differences).difference(set(result2)))
-		threadingpoools(different)
+		if not len(list(set(differences).difference(set(result2))))==0:
+			different=list(set(differences).difference(set(result2)))
+			threadingpoools(different)
+			print different
+		else:
+			pass
 		result2.append(q.get())
-		print list(set(result2)),list(set(threading.enumerate())),origin
-	print result2
+	print result2,'\n','ok'
 	'''script_urls=list(set(find_Script_type(result2)))#找脚本类型'''
 	'''formslist=list(set(find_the_forms(result2)))#看有没有表单'''
 
-
+def read_conf():
+	
 
 if __name__ == '__main__':
 	for task in local_url_get():
 		multiprocessingpool(run(i))
-	#站点列表→每个进程→多线程→线程重复爬行→站点爬行完毕→再查看页面中脚本类型与本站含有表单的页面 
-	#脚本类型的查询还是 在sql injection 写吧 这留着做个参考
-	#get_page_url 需要加个判断Url是否是本站下的 不然会跨站爬虫了
-	#文件写入应该写入到temp文件夹 
-
-	#爬虫 访问页面获取URL 得知URL与大集合result的差集 访问差集再次获取Url 再次求差集 访问差集的Url 
-	#我们在page_url_get中已经要求差集 然后将得到的差集global 分配到run中然后再分配 run中分配完一个url就删一个url直到差集小于一个值
-	#2016年7月17日 22:35:56 为写入重新连接代码  电脑会出现短暂"断网"所以我们要写一个timeout=3
