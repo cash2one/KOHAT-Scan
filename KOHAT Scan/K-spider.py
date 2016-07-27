@@ -41,6 +41,7 @@ def local_url_get():#获取本地BAIDU-URL SPIDER抓取到的搜索结果的Url
 def get_page_url(Url,Nones):#获取页面内的所有活的Url
 	'''[a-zA-z]+://[^"]* 此正则可以匹配任何处于页面下的Url'''
 	fliters=[]
+	fliter1=[]
 	try:
 		Req = urllib2.Request(Url,headers=send_headers)
 		Page = urllib2.urlopen(Req,timeout=15)
@@ -67,17 +68,8 @@ def get_page_url(Url,Nones):#获取页面内的所有活的Url
     		if script_url.find('.js')>0 or script_url.find('.css')>0 or script_url.find('.jpg')>0 or script_url.find('.png')>0:
     			pass
     		else:
-    			fliters.append(script_url)
-    	for a in all_page_url:
-    		try:
-    			for fliter in a.split("'"):
-    				if not re.match('[a-zA-z]+://[^"]*',a)==None:
-    					fliters.remove(a)
-    					fliters.append(fliter)
-    				else:
-    					fliters.remove(a)
-    		except:
-    			pass
+    			fliter1.append(script_url)
+    	
     	#情况二 页面是用 /xxxx/xxx.html之类的来打开站点下的页面 这样上面就无效了
     	try:
     		if len(re.findall("[']+/[^']*",DOM))>=len(re.findall('["]+/[^"]*',DOM)):
@@ -97,19 +89,32 @@ def get_page_url(Url,Nones):#获取页面内的所有活的Url
     	except Exception, e:
     		pass
 
-    	
-
 
     	try:
     		for e in range(len(all_page_url)):
     			if all_page_url[e].find("google.com")>0 or all_page_url[e].find(".js")>0 or all_page_url[e].find(".png")>0 or all_page_url[e].find(".jpg")>0 or all_page_url[e].find(".css")>0 or all_page_url[e].find('.xml')>0:
     				pass
     			else:
-    				fliters.append(all_page_url[e])
+    				fliter1.append(all_page_url[e])
     	except Exception, e:
     		pass
-        
-
+    	
+#url后可能接的是'  > ;所以要切 几次至于"因为我正则匹配到双引号为止所以不会出现 　晚上写上这段
+        plist=['<','>',';',"'"]
+        for i in fliter1:
+        	if not re.match('[a-zA-z]+://[^"]*',i)==None and not len(re.findall(r"[<>;']",i))>0:
+        		fliters.append(i)
+        	else:
+        		for e in i.split("'"):
+        			if not re.match('[a-zA-z]+://[^"]*',e)==None:
+        				for f in e.split(">"):
+        					if not re.match('[a-zA-z]+://[^"]*',f)==None:
+        						for g in f.split(";"):
+        							if not re.match('[a-zA-z]+://[^"]*',g)==None:
+        								for h in g.split("<"):
+        									if not re.match('[a-zA-z]+://[^"]*',h)==None:
+        										fliters.append(h)
+        										
     	try:
     		for h in list(set(fliters)):
     			Q.put(h)
@@ -120,7 +125,6 @@ def get_page_url(Url,Nones):#获取页面内的所有活的Url
     			q.put(x)
         except Exception, e:
     		print e,'q.put() fault'
-        return list(set(fliters))
 
 
 def find_Script_type(URLlist):#判断URL类型 决定sql 注入方式
@@ -220,7 +224,6 @@ def run(domainurl):
 	origin = list(set(threading.enumerate()))
 	threadingpoools(domainurl)
 	time.sleep(2)
-	time.clock()
 	#所有线程都完成后也要等q和Q空了后才能退出 这意味着要3个都是false才能退出 有一个true就得进行
 	while  not q.empty() or not Q.empty():#not list(set(threading.enumerate()))==origin or
 		time.sleep(0.2)
@@ -232,12 +235,13 @@ def run(domainurl):
 		else:
 			pass
 		result2.append(q.get())
-	print result2,'\n','ok'
+	print 'finished:',result2
 	'''script_urls=list(set(find_Script_type(result2)))#找脚本类型'''
 	'''formslist=list(set(find_the_forms(result2)))#看有没有表单'''
 
 def read_conf():
-	
+	pass
+
 
 if __name__ == '__main__':
 	for task in local_url_get():
