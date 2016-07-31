@@ -1,7 +1,12 @@
 # -*- coding: UTF-8 -*-
-import Tkinter
+import Tkinter,ttk
 root = Tkinter.Tk()
 root.title("KOHAT-Scan") 
+ttk.Style().configure("CB.TButton", padding=0, relief="flat",
+   background="white")#ttk样式
+
+root.attributes("-topmost", 1)#置顶
+
 
 '''流程
 1.基础部件 退出 最大化 最小化 窗口化
@@ -67,28 +72,44 @@ class main_windows: #只是为了做区分建了个类
 		canvas.bind("<Button-1>",self.button_1)
 		canvas.pack()
 
-	def main_button(self):
-		#—————————————————————————————— close windows button
+	def main_button(self):#tkinter样式 感觉效果比ttk好 把bd弄成0就没阴影了
 		global buttonmaxsize,buttonclose,buttonsmall
 		buttonwidth=30
 		buttonheight=30
 
-		buttonclose=Tkinter.Button(root, text='X', command=main_windows().close,bg='#1a1717',relief='flat',font=12,activebackground='#d61c1c',fg='white')#relief指定按钮边界类型 bg是背景颜色
+		buttonclose=Tkinter.Button(root, text='X', command=main_windows().close,bg='#1a1717',relief='flat',font=12,activebackground='#d61c1c',fg='white',bd=0)#relief指定按钮边界类型 bg是背景颜色
 		buttonclose.bind('<Enter>',self.change_close)
 		buttonclose.bind('<Button-1>',self.click_close)
 		buttonclose.bind('<Leave>',self.changebg2)
 		buttonclose.pack()
 		buttonclose.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*1))
 
-		buttonsmall=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg='#1a1717',relief='flat',activebackground='#46A3FF',fg='white')
+		buttonsmall=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg='#1a1717',relief='flat',activebackground='#46A3FF',fg='white',bd=0)
 		buttonsmall.bind('<Enter>',self.change_small)
 		buttonsmall.bind('<Leave>',self.changebg2)
 		buttonsmall.pack()
 		buttonsmall.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*3))
 
-		buttonmaxsize=Tkinter.Button(root, text='~', command=main_windows().change,bg='#1a1717',relief='flat',activebackground='#46A3FF',fg='white')
+		buttonmaxsize=Tkinter.Button(root, text='~', command=main_windows().change,bg='#1a1717',relief='flat',activebackground='#46A3FF',fg='white',bd=0)
 		buttonmaxsize.bind('<Enter>',self.changebg_maxsize)
 		buttonmaxsize.bind('<Leave>',self.changebg2)
+		buttonmaxsize.pack()
+		buttonmaxsize.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*2))
+
+	def main_buttons(self):#采用ttk样式
+		global buttonmaxsize,buttonclose,buttonsmall
+		buttonwidth=30
+		buttonheight=30
+
+		buttonclose=ttk.Button(root, text='×', command=main_windows().close)
+		buttonclose.pack()
+		buttonclose.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*1))
+
+		buttonsmall=ttk.Button(root, text='__', command=main_windows().click_minisize)
+		buttonsmall.pack()
+		buttonsmall.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*3))
+
+		buttonmaxsize=ttk.Button(root, text='~', command=main_windows().change)
 		buttonmaxsize.pack()
 		buttonmaxsize.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*2))
 
@@ -104,7 +125,8 @@ class main_windows: #只是为了做区分建了个类
 			main_windows().origin_size()
 			buttonmaxsize['text']='~'
 			widths.append(1000)
-#----------------------------------------------------------------鼠标划过
+
+#鼠标划过 时效果
 	def changebg_maxsize(self,event):
 		global buttonmaxsize
 		buttonmaxsize['bg']='#46A3FF'
@@ -130,7 +152,7 @@ class main_windows: #只是为了做区分建了个类
 
 
 
-#移动窗口 这个完全是百度出来的 因为高三八月一就要开学了
+#移动窗口 
 	def move(self,event):
 		global x,y
 		new_x = (event.x-x)+root.winfo_x()
@@ -141,7 +163,7 @@ class main_windows: #只是为了做区分建了个类
 		global x,y
 		x,y = event.x,event.y
 
-
+#菜单 可选
 	def Menu():
 		menubar = Menu(root)
 		menubar.add_command(label="Hello!", command=hello)
@@ -156,15 +178,49 @@ class tester:
 		Frames.pack()
 
 
-#_________________________________________________做个切换窗口 还是做个 选项按钮的
-	
+#_________________________________________________做个切换窗口 还是做个 选项
+	def kohat_spider(self):
+		buttonk=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+	def sql_injection(self):
+		button_sql_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_sql_injection
+	def xss_injection(self):
+		button_xss_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_xss_injection
+	def ftp_weak_password(self):
+		button_ftp_weak_password=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_ftp_weak_password
+	def SSRF(self):
+		button_SSRF=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_SSRF
+	def Logical_vulnerability(self):
+		button_Logical_vulnerability=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_Logical_vulnerability
+	def Arbitrary_file_downloa_or_upload(self):
+		button_Arbitrary_file_downloa_or_upload=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_Arbitrary_file_downloa_or_upload
+	def Xpath_injection(self):
+		button_Xpath_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_Xpath_injection
+	def Xml_injection(self):
+		button_Xml_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_Xml_injection
+	def Json_injection(self):
+		button_Json_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_Json_injection
+	def HTTP_header_pollute(self):
+		button_HTTP_header_pollute=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_HTTP_header_pollute
+	def poc_test(self):
+		button_poc_test=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
+		button_poc_test
 
 
-
-main_windows().baseUI()
-main_windows().main_button()
-tester().Frame()
-root.mainloop()
+if __name__ == '__main__':
+	main_windows().baseUI()
+	main_windows().main_button()
+	tester().Frame()
+	root.mainloop()
 
 '''
 父子窗口的参数传递就类似def 与def 或者 class与class的传递只是要def函数的时候要加入传递功能
