@@ -55,12 +55,12 @@ class main_windows: #只是为了做区分建了个类
 	def baseUI(self):
 		root.resizable(True,True)
 		root.overrideredirect(True)
-		root.attributes("-alpha",0.95)# 1是透明度为0% 0是透明度为100%
+		root.attributes("-alpha",1)# 1是透明度为0% 0是透明度为100%
 		root.geometry(str(width)+'x'+str(height)+'+10+10')#窗口大小 长*宽
 		canvas = Tkinter.Canvas(root)
 		canvas.configure(width = w)
 		canvas.configure(height = h)
-		canvas.configure(bg = "white")
+		canvas.configure(bg = "#1a1717")
 		root.bind('<Button-1>',self.returned)
 		canvas.configure(highlightthickness = 0)
 		canvas.bind("<B1-Motion>",self.move)
@@ -73,20 +73,20 @@ class main_windows: #只是为了做区分建了个类
 		buttonwidth=30
 		buttonheight=30
 
-		buttonclose=Tkinter.Button(root, text='X', command=main_windows().close,bg='white',relief='flat',font=12,activebackground='#d61c1c')#relief指定按钮边界类型 bg是背景颜色
+		buttonclose=Tkinter.Button(root, text='X', command=main_windows().close,bg='#1a1717',relief='flat',font=12,activebackground='#d61c1c',fg='white')#relief指定按钮边界类型 bg是背景颜色
 		buttonclose.bind('<Enter>',self.change_close)
 		buttonclose.bind('<Button-1>',self.click_close)
 		buttonclose.bind('<Leave>',self.changebg2)
 		buttonclose.pack()
 		buttonclose.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*1))
 
-		buttonsmall=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg='white',relief='flat',activebackground='#46A3FF')
+		buttonsmall=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg='#1a1717',relief='flat',activebackground='#46A3FF',fg='white')
 		buttonsmall.bind('<Enter>',self.change_small)
 		buttonsmall.bind('<Leave>',self.changebg2)
 		buttonsmall.pack()
 		buttonsmall.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*3))
 
-		buttonmaxsize=Tkinter.Button(root, text='~', command=main_windows().change,bg='white',relief='flat',activebackground='#46A3FF')
+		buttonmaxsize=Tkinter.Button(root, text='~', command=main_windows().change,bg='#1a1717',relief='flat',activebackground='#46A3FF',fg='white')
 		buttonmaxsize.bind('<Enter>',self.changebg_maxsize)
 		buttonmaxsize.bind('<Leave>',self.changebg2)
 		buttonmaxsize.pack()
@@ -120,9 +120,9 @@ class main_windows: #只是为了做区分建了个类
 #鼠标按完后恢复
 	def changebg2(self,event):
 		global buttonmaxsize,buttonclose,buttonsmall
-		buttonmaxsize['bg']='white'
-		buttonclose['bg']='white'
-		buttonsmall['bg']='white'
+		buttonmaxsize['bg']='#1a1717'
+		buttonclose['bg']='#1a1717'
+		buttonsmall['bg']='#1a1717'
 #按下效果
 	def click_close(self,event):
 		global buttonclose
@@ -151,45 +151,19 @@ class main_windows: #只是为了做区分建了个类
 #功能模块_
 
 class tester:
-	def sql_injection(self):
-		button_sql_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_sql_injection
-	def xss_injection(self):
-		button_xss_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_xss_injection
-	def ftp_weak_password(self):
-		button_ftp_weak_password=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_ftp_weak_password
-	def SSRF(self):
-		button_SSRF=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_SSRF
-	def Logical_vulnerability(self):
-		button_Logical_vulnerability=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_Logical_vulnerability
-	def Arbitrary_file_downloa_or_upload(self):
-		button_Arbitrary_file_downloa_or_upload=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_Arbitrary_file_downloa_or_upload
-	def Xpath_injection(self):
-		button_Xpath_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_Xpath_injection
-	def Xml_injection(self):
-		button_Xml_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_Xml_injection
-	def Json_injection(self):
-		button_Json_injection=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_Json_injection
-	def HTTP_header_pollute(self):
-		button_HTTP_header_pollute=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_HTTP_header_pollute
-	def poc_test(self):
-		button_poc_test=Tkinter.Button(root, text='/', command=None,bg='white',relief='flat')
-		button_poc_test
+	def Frame(self):
+		Frames=Tkinter.Frame(height=600,width=100)
+		Frames.pack()
 
+
+#_________________________________________________做个切换窗口 还是做个 选项按钮的
+	
 
 
 
 main_windows().baseUI()
 main_windows().main_button()
+tester().Frame()
 root.mainloop()
 
 '''
@@ -208,7 +182,6 @@ root.mainloop()
 '''
 '''
 23. 如何设置右键菜单?
-
 	
 context_menu = Menu(self.tv, tearoff=0)
 context_menu.add_command(label="复制", command=copy_handler)
