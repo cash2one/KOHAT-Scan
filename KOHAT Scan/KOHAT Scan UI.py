@@ -5,7 +5,7 @@ root.title("KOHAT-Scan")
 ttk.Style().configure("CB.TButton", padding=0, relief="flat",
    background="white")#ttk样式
 
-root.attributes("-topmost", 1)#置顶
+'''root.attributes("-topmost", 1)'''#置顶
 
 
 '''流程
@@ -13,6 +13,12 @@ root.attributes("-topmost", 1)#置顶
 2.基本功能 拉伸放大 子窗口的切换
 3.子窗口内布局 迟点详细画 先弄到基础部件和父窗口布局
 参考界面 github
+
+
+
+界面切换 部件是方法 place_forget() → place() →place_forget()  意思就是隐藏重现隐藏重现真特么神奇 饱读教程并实践才是道理啊
+
+如果能获取当前窗口情况或许能用 place_forget()来控制窗口自定义缩放后按钮的位置
 '''
 
 width=1200
@@ -63,90 +69,130 @@ class main_windows: #只是为了做区分建了个类
 		canvas = Tkinter.Canvas(root)
 		canvas.configure(width = w)
 		canvas.configure(height = h)
-		canvas.configure(bg = "#1a1717")
-		root.bind('<Button-1>',self.returned)
+		canvas.configure(bg = color1)
+		root.bind('<Button-2>',self.returned)
 		canvas.configure(highlightthickness = 0)
 		canvas.bind("<B1-Motion>",self.move)
 		canvas.bind("<Button-1>",self.button_1)
 		canvas.pack()
 
 	def main_button(self):#tkinter样式 感觉效果比ttk好 把bd弄成0就没阴影了
-		global buttonmaxsize,buttonclose,buttonsmall
+		global buttonmaxsizeA,buttoncloseA,buttonsmallA
 		buttonwidth=30
 		buttonheight=30
 
-		buttonclose=Tkinter.Button(root, text='X', command=main_windows().close,bg='#1a1717',relief='flat',font=12,activebackground='#d61c1c',fg='white',bd=0)#relief指定按钮边界类型 bg是背景颜色
-		buttonclose.bind('<Enter>',self.change_close)
-		buttonclose.bind('<Button-1>',self.click_close)
-		buttonclose.bind('<Leave>',self.changebg2)
-		buttonclose.pack()
-		buttonclose.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*1))
+		buttoncloseA=Tkinter.Button(root, text='X', command=main_windows().close,bg=color1,relief='flat',font=12,activebackground='#d61c1c',fg=wordcolor,bd=0)#relief指定按钮边界类型 bg是背景颜色
+		buttoncloseA.bind('<Enter>',self.change_close)
+		buttoncloseA.bind('<Button-1>',self.click_close)
+		buttoncloseA.bind('<Leave>',self.changebg2)
+		buttoncloseA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*1))
 
-		buttonsmall=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg='#1a1717',relief='flat',activebackground='#46A3FF',fg='white',bd=0)
-		buttonsmall.bind('<Enter>',self.change_small)
-		buttonsmall.bind('<Leave>',self.changebg2)
-		buttonsmall.pack()
-		buttonsmall.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*3))
+		buttonsmallA=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg=color1,relief='flat',activebackground='#46A3FF',fg=wordcolor,bd=0)
+		buttonsmallA.bind('<Enter>',self.change_small)
+		buttonsmallA.bind('<Leave>',self.changebg2)
+		buttonsmallA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*3))
+#最大化
+		buttonmaxsizeA=Tkinter.Button(root, text='~', command=main_windows().maxsize,bg=color1,relief='flat',activebackground='#46A3FF',fg=wordcolor,bd=0)
+		buttonmaxsizeA.bind('<Enter>',self.changebg_maxsize)
+		buttonmaxsizeA.bind('<Leave>',self.changebg2)
+		buttonmaxsizeA.bind('<ButtonRelease-1>',self.tk_forgetA)
+		buttonmaxsizeA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*2))
 
-		buttonmaxsize=Tkinter.Button(root, text='~', command=main_windows().change,bg='#1a1717',relief='flat',activebackground='#46A3FF',fg='white',bd=0)
-		buttonmaxsize.bind('<Enter>',self.changebg_maxsize)
-		buttonmaxsize.bind('<Leave>',self.changebg2)
-		buttonmaxsize.pack()
-		buttonmaxsize.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*2))
-
-	def main_buttons(self):#采用ttk样式
-		global buttonmaxsize,buttonclose,buttonsmall
+	def main_buttonS(self):#最大化时候的情况
+		global buttonmaxsizeB,buttoncloseB,buttonsmallB
 		buttonwidth=30
 		buttonheight=30
 
-		buttonclose=ttk.Button(root, text='×', command=main_windows().close)
-		buttonclose.pack()
-		buttonclose.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*1))
-
-		buttonsmall=ttk.Button(root, text='__', command=main_windows().click_minisize)
-		buttonsmall.pack()
-		buttonsmall.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*3))
-
-		buttonmaxsize=ttk.Button(root, text='~', command=main_windows().change)
-		buttonmaxsize.pack()
-		buttonmaxsize.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*2))
+		buttoncloseB=Tkinter.Button(root, text='X', command=main_windows().close,bg=color1,relief='flat',font=12,activebackground='#d61c1c',fg=wordcolor,bd=0)#relief指定按钮边界类型 bg是背景颜色
+		buttoncloseB.bind('<Enter>',self.change_closeB)
+		buttoncloseB.bind('<Button-1>',self.click_closeB)
+		buttoncloseB.bind('<Leave>',self.changebg2)
+		buttoncloseB.place_forget()
 
 
-	def change(self):
-		global buttonmaxsize
-		if buttonmaxsize['text']=='~':
-			buttonmaxsize['text']='-'
-			main_windows().maxsize()
-			widths.append(1280)
-			root.update_idletasks()#？？？？？？？？？？？？？？？？？？？？？？
-		else:
-			main_windows().origin_size()
-			buttonmaxsize['text']='~'
-			widths.append(1000)
+		buttonsmallB=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg=color1,relief='flat',activebackground='#46A3FF',fg=wordcolor,bd=0)
+		buttonsmallB.bind('<Enter>',self.change_smallB)
+		buttonsmallB.bind('<Leave>',self.changebg2)
+		buttonsmallB.place_forget()
+
+#窗口化
+		buttonmaxsizeB=Tkinter.Button(root, text='---', command=main_windows().origin_size,bg=color1,relief='flat',activebackground='#46A3FF',fg=wordcolor,bd=0)
+		buttonmaxsizeB.bind('<Enter>',self.changebg_maxsizeB)
+		buttonmaxsizeB.bind('<Leave>',self.changebg2)
+		buttonmaxsizeB.bind('<ButtonRelease-1>',self.tk_forgetB)
+		buttonmaxsizeB.place_forget()
+
+
+
+
+	def tk_forgetA(self,event):
+		global buttonmaxsizeA,buttoncloseA,buttonsmallA,buttonmaxsizeB,buttoncloseB,buttonsmallB
+		buttonmaxsizeA.place_forget()
+		buttoncloseA.place_forget()
+		buttonsmallA.place_forget()
+
+		buttonwidth=30
+		buttonheight=30
+		buttoncloseB.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(w-buttonheight*1))
+		buttonsmallB.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(w-buttonheight*3))
+		buttonmaxsizeB.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(w-buttonheight*2))
+
+
+
+	def tk_forgetB(self,event):
+		global buttonmaxsizeA,buttoncloseA,buttonsmallA,buttonmaxsizeB,buttoncloseB,buttonsmallB
+		buttonmaxsizeB.place_forget()
+		buttoncloseB.place_forget()
+		buttonsmallB.place_forget()
+		buttonwidth=30
+		buttonheight=30		
+		buttoncloseA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[0]-buttonheight*1))
+		buttonsmallA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[0]-buttonheight*3))
+		buttonmaxsizeA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[0]-buttonheight*2))
+
+
+
 
 #鼠标划过 时效果
 	def changebg_maxsize(self,event):
-		global buttonmaxsize
-		buttonmaxsize['bg']='#46A3FF'
+		global buttonmaxsizeA
+		buttonmaxsizeA['bg']='#46A3FF'
+	def changebg_maxsizeB(self,event):
+		global buttonmaxsizeB
+		buttonmaxsizeB['bg']='#46A3FF'
 
 	def change_close(self,event):
-		global buttonclose
-		buttonclose['bg']='#ff0000'
+		global buttoncloseA
+		buttoncloseA['bg']='#ff0000'
+
+	def change_closeB(self,event):
+		global buttoncloseB
+		buttoncloseB['bg']='#ff0000'
 
 	def change_small(self,event):
-		global buttonsmall
-		buttonsmall['bg']='#46A3FF'
+		global buttonsmallA
+		buttonsmallA['bg']='#46A3FF'
+
+	def change_smallB(self,event):
+		global buttonsmallB
+		buttonsmallB['bg']='#46A3FF'
 
 #鼠标按完后恢复
 	def changebg2(self,event):
-		global buttonmaxsize,buttonclose,buttonsmall
-		buttonmaxsize['bg']='#1a1717'
-		buttonclose['bg']='#1a1717'
-		buttonsmall['bg']='#1a1717'
+		global buttonmaxsizeA,buttoncloseA,buttonsmallA,buttonmaxsizeB,buttoncloseB,buttonsmallB
+		buttonmaxsizeA['bg']=color1
+		buttoncloseA['bg']=color1
+		buttonsmallA['bg']=color1
+		buttonmaxsizeB['bg']=color1
+		buttoncloseB['bg']=color1
+		buttonsmallB['bg']=color1
 #按下效果
 	def click_close(self,event):
-		global buttonclose
-		buttonclose['bg']='#46A3FF'
+		global buttoncloseA
+		buttoncloseA['bg']='#46A3FF'
+	def click_closeB(self,event):
+		global buttoncloseB
+		buttoncloseB['bg']='#46A3FF'
 
 
 
@@ -189,15 +235,16 @@ class tester_frame:
 
 
 #测试模块功能按钮 每个功能有自己界面 所以我每个独立出一个类来调用
-color1='#424242' #基本要色
-color2='#715858' #划过时候颜色
-color3='#656565' #按下时候颜色
+color1='white' #基本要色
+color2='#c7c7c7' #划过时候颜色 仅限于非主题框按钮
+color3='#656565' #按下时候颜色 仅限于非主题框按钮
+wordcolor='black'
 widthz=40
 heightz=250
 class KOHAT_spider:
 	def kohat_spider(self):
 		global buttonk
-		buttonk=Tkinter.Button(root, text='KOHAT spider', command=None,bg=color1,relief='flat',bd=0,fg='white',activebackground=color3)
+		buttonk=Tkinter.Button(root, text='KOHAT spider', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3)
 		buttonk.bind('<Enter>',self.color)
 		buttonk.bind('<Leave>',self.color2)
 		buttonk.pack()
@@ -215,7 +262,7 @@ class KOHAT_spider:
 class sql_injection:
 	def sql_injection(self):
 		global button_sql_injection
-		button_sql_injection=Tkinter.Button(root, text='sql injection', command=None,bg=color1,relief='flat',bd=0,fg='white',activebackground=color3)
+		button_sql_injection=Tkinter.Button(root, text='sql injection', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3)
 		button_sql_injection.bind('<Enter>',self.color)
 		button_sql_injection.bind('<Leave>',self.color2)
 		button_sql_injection.pack()
@@ -233,7 +280,7 @@ class sql_injection:
 class xss_injection:	
 	def xss_injection(self):
 		global button_xss_injection
-		button_xss_injection=Tkinter.Button(root, text='xss injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_xss_injection=Tkinter.Button(root, text='xss injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_xss_injection.bind('<Enter>',self.color)
 		button_xss_injection.bind('<Leave>',self.color2)
 		button_xss_injection.pack()
@@ -251,7 +298,7 @@ class xss_injection:
 class ftp_weak_password:
 	def ftp_weak_password(self):
 		global button_ftp_weak_password
-		button_ftp_weak_password=Tkinter.Button(root, text='ftp weak password', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_ftp_weak_password=Tkinter.Button(root, text='ftp weak password', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_ftp_weak_password.bind('<Enter>',self.color)
 		button_ftp_weak_password.bind('<Leave>',self.color2)
 		button_ftp_weak_password.pack()
@@ -269,7 +316,7 @@ class ftp_weak_password:
 class SSRF:	
 	def SSRF(self):
 		global button_SSRF
-		button_SSRF=Tkinter.Button(root, text='SSRF', command=None,bg=color1,relief='flat',bd=0,fg='white',activebackground=color3)
+		button_SSRF=Tkinter.Button(root, text='SSRF', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3)
 		button_SSRF.bind('<Enter>',self.color)
 		button_SSRF.bind('<Leave>',self.color2)
 		button_SSRF.pack()
@@ -286,7 +333,7 @@ class SSRF:
 class Logical_vulnerability:	
 	def Logical_vulnerability(self):
 		global button_Logical_vulnerability
-		button_Logical_vulnerability=Tkinter.Button(root, text='Logical vulnerability', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_Logical_vulnerability=Tkinter.Button(root, text='Logical vulnerability', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_Logical_vulnerability.bind('<Enter>',self.color)
 		button_Logical_vulnerability.bind('<Leave>',self.color2)
 		button_Logical_vulnerability.pack()
@@ -303,7 +350,7 @@ class Logical_vulnerability:
 class Arbitrary_file_download_or_upload:	
 	def Arbitrary_file_download_or_upload(self):
 		global button_Arbitrary_file_downloa_or_upload
-		button_Arbitrary_file_downloa_or_upload=Tkinter.Button(root, text='Arbitraryd download/upload', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_Arbitrary_file_downloa_or_upload=Tkinter.Button(root, text='Arbitraryd download/upload', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_Arbitrary_file_downloa_or_upload.bind('<Enter>',self.color)
 		button_Arbitrary_file_downloa_or_upload.bind('<Leave>',self.color2)
 		button_Arbitrary_file_downloa_or_upload.pack()
@@ -320,7 +367,7 @@ class Arbitrary_file_download_or_upload:
 class Xpath_injection:	
 	def Xpath_injection(self):
 		global button_Xpath_injection
-		button_Xpath_injection=Tkinter.Button(root, text='Xpath injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_Xpath_injection=Tkinter.Button(root, text='Xpath injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_Xpath_injection.bind('<Enter>',self.color)
 		button_Xpath_injection.bind('<Leave>',self.color2)
 		button_Xpath_injection.pack()
@@ -338,7 +385,7 @@ class Xpath_injection:
 class Xml_injection:	
 	def Xml_injection(self):
 		global button_Xml_injection
-		button_Xml_injection=Tkinter.Button(root, text='Xml injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_Xml_injection=Tkinter.Button(root, text='Xml injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_Xml_injection.bind('<Enter>',self.color)
 		button_Xml_injection.bind('<Leave>',self.color2)
 		button_Xml_injection.pack()
@@ -356,7 +403,7 @@ class Xml_injection:
 class Json_injection:	
 	def Json_injection(self):
 		global button_Json_injection
-		button_Json_injection=Tkinter.Button(root, text='Json injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_Json_injection=Tkinter.Button(root, text='Json injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_Json_injection.bind('<Enter>',self.color)
 		button_Json_injection.bind('<Leave>',self.color2)
 		button_Json_injection.pack()
@@ -373,7 +420,7 @@ class Json_injection:
 class HTTP_header_pollute:	
 	def HTTP_header_pollute(self):
 		global button_HTTP_header_pollute
-		button_HTTP_header_pollute=Tkinter.Button(root, text='HTTP header pollute', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_HTTP_header_pollute=Tkinter.Button(root, text='HTTP header pollute', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_HTTP_header_pollute.bind('<Enter>',self.color)
 		button_HTTP_header_pollute.bind('<Leave>',self.color2)
 		button_HTTP_header_pollute.pack()
@@ -391,7 +438,7 @@ class HTTP_header_pollute:
 class poc_test:	
 	def poc_test(self):
 		global button_poc_test
-		button_poc_test=Tkinter.Button(root, text='poc_test', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg='white')
+		button_poc_test=Tkinter.Button(root, text='poc_test', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
 		button_poc_test.bind('<Enter>',self.color)
 		button_poc_test.bind('<Leave>',self.color2)
 		button_poc_test.pack()
@@ -427,6 +474,7 @@ def start_test_button():
 if __name__ == '__main__':
 	main_windows().baseUI()
 	main_windows().main_button()
+	main_windows().main_buttonS()
 	tester_frame().Frame()
 	start_test_button()
 	'''
