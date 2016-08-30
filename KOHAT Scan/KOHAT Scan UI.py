@@ -70,7 +70,7 @@ class main_windows: #只是为了做区分建了个类
 		canvas.configure(width = w)
 		canvas.configure(height = h)
 		canvas.configure(bg = color1)
-		root.bind('<Button-2>',self.returned)
+		root.bind('<Button-1>',self.returned)
 		canvas.configure(highlightthickness = 0)
 		canvas.bind("<B1-Motion>",self.move)
 		canvas.bind("<Button-1>",self.button_1)
@@ -219,8 +219,8 @@ class main_windows: #只是为了做区分建了个类
 
 class tester_frame:
 	def Frame(self):
-		Frames=Tkinter.Frame(root,height=600,width=100,bg='white')
-		Frames.pack(side='left')
+		frame = Tkinter.Frame(root,bg='gray')
+		frame.place(x=heightz,y=40,height=height-40*2,width=width-60)
 	def PanedWindow(self):
 		PanedWindow=Tkinter.PanedWindow(orient=VERTICAL)
 		PanedWindow.pack(fill='both',expand=1)
@@ -239,12 +239,14 @@ color1='white' #基本要色
 color2='#c7c7c7' #划过时候颜色 仅限于非主题框按钮
 color3='#656565' #按下时候颜色 仅限于非主题框按钮
 wordcolor='black'
-widthz=40
-heightz=250
+widthz=30
+heightz=220
+fontsize=None
+
 class KOHAT_spider:
 	def kohat_spider(self):
 		global buttonk
-		buttonk=Tkinter.Button(root, text='KOHAT spider', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3)
+		buttonk=Tkinter.Button(root, text='KOHAT spider', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
 		buttonk.bind('<Enter>',self.color)
 		buttonk.bind('<Leave>',self.color2)
 		buttonk.pack()
@@ -258,11 +260,15 @@ class KOHAT_spider:
 		global buttonk
 		buttonk['bg']=color1
 
+	def  functional_module(self):
+		pass
+
+
 
 class sql_injection:
 	def sql_injection(self):
 		global button_sql_injection
-		button_sql_injection=Tkinter.Button(root, text='sql injection', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3)
+		button_sql_injection=Tkinter.Button(root, text='sql injection', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
 		button_sql_injection.bind('<Enter>',self.color)
 		button_sql_injection.bind('<Leave>',self.color2)
 		button_sql_injection.pack()
@@ -280,7 +286,7 @@ class sql_injection:
 class xss_injection:	
 	def xss_injection(self):
 		global button_xss_injection
-		button_xss_injection=Tkinter.Button(root, text='xss injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_xss_injection=Tkinter.Button(root, text='xss injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_xss_injection.bind('<Enter>',self.color)
 		button_xss_injection.bind('<Leave>',self.color2)
 		button_xss_injection.pack()
@@ -298,7 +304,7 @@ class xss_injection:
 class ftp_weak_password:
 	def ftp_weak_password(self):
 		global button_ftp_weak_password
-		button_ftp_weak_password=Tkinter.Button(root, text='ftp weak password', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_ftp_weak_password=Tkinter.Button(root, text='ftp weak password', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_ftp_weak_password.bind('<Enter>',self.color)
 		button_ftp_weak_password.bind('<Leave>',self.color2)
 		button_ftp_weak_password.pack()
@@ -316,7 +322,7 @@ class ftp_weak_password:
 class SSRF:	
 	def SSRF(self):
 		global button_SSRF
-		button_SSRF=Tkinter.Button(root, text='SSRF', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3)
+		button_SSRF=Tkinter.Button(root, text='SSRF', command=None,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
 		button_SSRF.bind('<Enter>',self.color)
 		button_SSRF.bind('<Leave>',self.color2)
 		button_SSRF.pack()
@@ -333,7 +339,7 @@ class SSRF:
 class Logical_vulnerability:	
 	def Logical_vulnerability(self):
 		global button_Logical_vulnerability
-		button_Logical_vulnerability=Tkinter.Button(root, text='Logical vulnerability', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_Logical_vulnerability=Tkinter.Button(root, text='Logical vulnerability', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_Logical_vulnerability.bind('<Enter>',self.color)
 		button_Logical_vulnerability.bind('<Leave>',self.color2)
 		button_Logical_vulnerability.pack()
@@ -350,7 +356,7 @@ class Logical_vulnerability:
 class Arbitrary_file_download_or_upload:	
 	def Arbitrary_file_download_or_upload(self):
 		global button_Arbitrary_file_downloa_or_upload
-		button_Arbitrary_file_downloa_or_upload=Tkinter.Button(root, text='Arbitraryd download/upload', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_Arbitrary_file_downloa_or_upload=Tkinter.Button(root, text='Arbitraryd down/up', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_Arbitrary_file_downloa_or_upload.bind('<Enter>',self.color)
 		button_Arbitrary_file_downloa_or_upload.bind('<Leave>',self.color2)
 		button_Arbitrary_file_downloa_or_upload.pack()
@@ -367,7 +373,7 @@ class Arbitrary_file_download_or_upload:
 class Xpath_injection:	
 	def Xpath_injection(self):
 		global button_Xpath_injection
-		button_Xpath_injection=Tkinter.Button(root, text='Xpath injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_Xpath_injection=Tkinter.Button(root, text='Xpath injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_Xpath_injection.bind('<Enter>',self.color)
 		button_Xpath_injection.bind('<Leave>',self.color2)
 		button_Xpath_injection.pack()
@@ -385,7 +391,7 @@ class Xpath_injection:
 class Xml_injection:	
 	def Xml_injection(self):
 		global button_Xml_injection
-		button_Xml_injection=Tkinter.Button(root, text='Xml injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_Xml_injection=Tkinter.Button(root, text='Xml injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_Xml_injection.bind('<Enter>',self.color)
 		button_Xml_injection.bind('<Leave>',self.color2)
 		button_Xml_injection.pack()
@@ -403,7 +409,7 @@ class Xml_injection:
 class Json_injection:	
 	def Json_injection(self):
 		global button_Json_injection
-		button_Json_injection=Tkinter.Button(root, text='Json injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_Json_injection=Tkinter.Button(root, text='Json injection', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_Json_injection.bind('<Enter>',self.color)
 		button_Json_injection.bind('<Leave>',self.color2)
 		button_Json_injection.pack()
@@ -420,7 +426,7 @@ class Json_injection:
 class HTTP_header_pollute:	
 	def HTTP_header_pollute(self):
 		global button_HTTP_header_pollute
-		button_HTTP_header_pollute=Tkinter.Button(root, text='HTTP header pollute', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_HTTP_header_pollute=Tkinter.Button(root, text='HTTP header pollute', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_HTTP_header_pollute.bind('<Enter>',self.color)
 		button_HTTP_header_pollute.bind('<Leave>',self.color2)
 		button_HTTP_header_pollute.pack()
@@ -438,7 +444,7 @@ class HTTP_header_pollute:
 class poc_test:	
 	def poc_test(self):
 		global button_poc_test
-		button_poc_test=Tkinter.Button(root, text='poc_test', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor)
+		button_poc_test=Tkinter.Button(root, text='poc_test', command=None,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
 		button_poc_test.bind('<Enter>',self.color)
 		button_poc_test.bind('<Leave>',self.color2)
 		button_poc_test.pack()
