@@ -264,17 +264,6 @@ class tester_frame:
 	def Frame(self):
 		frame = Tkinter.Frame(root,bg='gray')
 		frame.place(x=heightz,y=40,height=height-40*2,width=width-60)
-	def PanedWindow(self):
-		PanedWindow=Tkinter.PanedWindow(orient=VERTICAL)
-		PanedWindow.pack(fill='both',expand=1)
-	def canvas(self):
-		root.geometry(str(widthz)+'x'+str(heightz)+'+10+10')#窗口大小 长*宽
-		canvas = Tkinter.Canvas(root)
-		canvas.configure(width = w)
-		canvas.configure(height = heightz)
-		canvas.configure(bg = "#4a4242")
-		canvas.configure(highlightthickness = 0)
-		canvas.pack()
 
 
 #测试模块功能按钮 每个功能有自己界面 所以我每个独立出一个类来调用
@@ -313,6 +302,9 @@ class KOHAT_spider:
 		click_testerpart()
 		buttonk['bg']=color3
 
+	def spider_part(self):
+		Spider_entry=Tkinter.Entry(frame,bd=0)
+		Spider_entry.place()
 
 class sql_injection:
 	def sql_injection(self):
@@ -397,6 +389,7 @@ class ftp_weak_password:
 		global button_ftp_weak_password
 		click_testerpart()
 		button_ftp_weak_password['bg']=color3
+
 
 
 class SSRF:	
@@ -648,14 +641,7 @@ if __name__ == '__main__':
 	'''
 	root.mainloop()
 
-'''
-父子窗口的参数传递就类似def 与def 或者 class与class的传递只是要def函数的时候要加入传递功能
-每次按下一图时,把存放图片的控件烧毁,即存放PHOTOIMAGE的控件烧毁,
-然后再打包,然后再放入图片,再设图片定尺寸,图片尺寸的声名要全局性GLOBAL
-如果是单改变某控件的组态,这个实例化了控件,其实还是在内存中的,
-你把他一拖,啥缩放就没了(也可能是因为不是全局性的变量)
-紧记->烧毁->再打包->再自动设定缩放大小(GLOBAL全局变量) 
-'''
+
 '''
 23. 如何设置右键菜单?
 	
