@@ -1,5 +1,8 @@
 # -*- coding: UTF-8 -*-
 import Tkinter,ttk
+from PIL import ImageTk,Image
+import sys,os
+
 root = Tkinter.Tk()
 root.title("KOHAT-Scan") 
 ttk.Style().configure("CB.TButton", padding=0, relief="flat",
@@ -21,6 +24,26 @@ ttk.Style().configure("CB.TButton", padding=0, relief="flat",
 如果能获取当前窗口情况或许能用 place_forget()来控制窗口自定义缩放后按钮的位置
 '''
 
+#获取本地路径
+path = os.path.abspath(sys.argv[0])[:-16]
+print path
+
+#普通状态下的图标
+icon_windows = ImageTk.PhotoImage(file = str(path)+r"img\main Button\windows.jpg")
+icon_maxsize = ImageTk.PhotoImage(file = str(path)+r"img\main Button\maxsize.jpg")
+icon_minsize = ImageTk.PhotoImage(file = str(path)+r"img\main Button\minisize.jpg")
+icon_close = ImageTk.PhotoImage(file = str(path)+r"img\main Button\close.jpg")
+#划过时候图标
+icon_windows_slip = ImageTk.PhotoImage(file = str(path)+r"img\main Button\windows_slip.jpg")
+icon_maxsize_slip = ImageTk.PhotoImage(file = str(path)+r"img\main Button\maxsize_slip.jpg")
+icon_minsize_slip = ImageTk.PhotoImage(file = str(path)+r"img\main Button\minisize_slip.jpg")
+icon_close_slip = ImageTk.PhotoImage(file = str(path)+r"img\main Button\close_slip.jpg")
+#按下时候图标
+icon_windows_push = ImageTk.PhotoImage(file = str(path)+r"img\main Button\windows_push.jpg")
+icon_maxsize_push = ImageTk.PhotoImage(file = str(path)+r"img\main Button\maxsize_push.jpg")
+icon_minsize_push = ImageTk.PhotoImage(file = str(path)+r"img\main Button\minisize_push.jpg")
+icon_close_push = ImageTk.PhotoImage(file = str(path)+r"img\main Button\close_push.jpg")
+
 width=1200
 height=600
 w = root.winfo_screenwidth()
@@ -39,11 +62,13 @@ class main_windows: #只是为了做区分建了个类
 
 	def maxsize(self):
 		root.state("zoomed")
+		main_windows().tk_forgetA()
 		#最大化但是要想到捕抓当前窗口大小的方法
 
 
 	def origin_size(self):
 		root.state("normal")
+		main_windows().tk_forgetB()
 		#普通窗口模式 还有其他几个模式normal, iconic, withdrawn, or zoomed 打错东西就会回显能有啥模式选吼吼
 
 
@@ -81,52 +106,54 @@ class main_windows: #只是为了做区分建了个类
 		buttonwidth=30
 		buttonheight=30
 
-		buttoncloseA=Tkinter.Button(root, text='X', command=main_windows().close,bg=color1,relief='flat',font=12,activebackground='#d61c1c',fg=wordcolor,bd=0)#relief指定按钮边界类型 bg是背景颜色
+		buttoncloseA=Tkinter.Button(root, image=icon_close, command=main_windows().close,bg=color1,relief='flat',font=12,activebackground='white',fg=wordcolor,bd=0)#relief指定按钮边界类型 bg是背景颜色
 		buttoncloseA.bind('<Enter>',self.change_close)
 		buttoncloseA.bind('<Button-1>',self.click_close)
 		buttoncloseA.bind('<Leave>',self.changebg2)
 		buttoncloseA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*1))
 
-		buttonsmallA=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg=color1,relief='flat',activebackground='#46A3FF',fg=wordcolor,bd=0)
+		buttonsmallA=Tkinter.Button(root, image=icon_minsize, command=main_windows().click_minisize,bg=color1,relief='flat',activebackground='white',fg=wordcolor,bd=0)
 		buttonsmallA.bind('<Enter>',self.change_small)
+		buttonsmallA.bind('<Button-1>',self.click_minisizeS)
 		buttonsmallA.bind('<Leave>',self.changebg2)
 		buttonsmallA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*3))
 #最大化
-		buttonmaxsizeA=Tkinter.Button(root, text='~', command=main_windows().maxsize,bg=color1,relief='flat',activebackground='#46A3FF',fg=wordcolor,bd=0)
+		buttonmaxsizeA=Tkinter.Button(root, image=icon_maxsize, command=main_windows().maxsize,bg=color1,relief='flat',activebackground='white',fg=wordcolor,bd=0)
 		buttonmaxsizeA.bind('<Enter>',self.changebg_maxsize)
+		buttonmaxsizeA.bind('<Button-1>',self.click_maxsize)
 		buttonmaxsizeA.bind('<Leave>',self.changebg2)
-		buttonmaxsizeA.bind('<ButtonRelease-1>',self.tk_forgetA)
-		buttonmaxsizeA.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*2))
+		buttonmaxsizeA.place(height=buttonheight, width=buttonheight,x=(widths[-1]-buttonheight*2))
 
 	def main_buttonS(self):#最大化时候的情况
-		global buttonmaxsizeB,buttoncloseB,buttonsmallB
+		global buttonwindowsB,buttoncloseB,buttonsmallB
 		buttonwidth=30
 		buttonheight=30
 
-		buttoncloseB=Tkinter.Button(root, text='X', command=main_windows().close,bg=color1,relief='flat',font=12,activebackground='#d61c1c',fg=wordcolor,bd=0)#relief指定按钮边界类型 bg是背景颜色
+		buttoncloseB=Tkinter.Button(root, image=icon_close, command=main_windows().close,bg=color1,relief='flat',font=12,activebackground='white',fg=wordcolor,bd=0)#relief指定按钮边界类型 bg是背景颜色
 		buttoncloseB.bind('<Enter>',self.change_closeB)
 		buttoncloseB.bind('<Button-1>',self.click_closeB)
-		buttoncloseB.bind('<Leave>',self.changebg2)
+		buttoncloseB.bind('<Leave>',self.changebg3)
 		buttoncloseB.place_forget()
 
 
-		buttonsmallB=Tkinter.Button(root, text='__', command=main_windows().click_minisize,bg=color1,relief='flat',activebackground='#46A3FF',fg=wordcolor,bd=0)
+		buttonsmallB=Tkinter.Button(root, image=icon_minsize, command=main_windows().click_minisize,bg=color1,relief='flat',activebackground='white',fg=wordcolor,bd=0)
 		buttonsmallB.bind('<Enter>',self.change_smallB)
-		buttonsmallB.bind('<Leave>',self.changebg2)
+		buttonsmallB.bind('<Button-1>',self.click_minisizeB)
+		buttonsmallB.bind('<Leave>',self.changebg3)
 		buttonsmallB.place_forget()
 
 #窗口化
-		buttonmaxsizeB=Tkinter.Button(root, text='---', command=main_windows().origin_size,bg=color1,relief='flat',activebackground='#46A3FF',fg=wordcolor,bd=0)
-		buttonmaxsizeB.bind('<Enter>',self.changebg_maxsizeB)
-		buttonmaxsizeB.bind('<Leave>',self.changebg2)
-		buttonmaxsizeB.bind('<ButtonRelease-1>',self.tk_forgetB)
-		buttonmaxsizeB.place_forget()
+		buttonwindowsB=Tkinter.Button(root, image=icon_windows, command=main_windows().origin_size,bg=color1,relief='flat',activebackground='white',fg=wordcolor,bd=0)
+		buttonwindowsB.bind('<Enter>',self.changebg_maxsizeB)
+		buttonwindowsB.bind('<Button-1>',self.click_windows)
+		buttonwindowsB.bind('<Leave>',self.changebg3)
+		buttonwindowsB.place_forget()
 
 
 
 
-	def tk_forgetA(self,event):
-		global buttonmaxsizeA,buttoncloseA,buttonsmallA,buttonmaxsizeB,buttoncloseB,buttonsmallB
+	def tk_forgetA(self):
+		global buttonmaxsizeA,buttoncloseA,buttonsmallA,buttonwindowsB,buttoncloseB,buttonsmallB
 		buttonmaxsizeA.place_forget()
 		buttoncloseA.place_forget()
 		buttonsmallA.place_forget()
@@ -135,13 +162,13 @@ class main_windows: #只是为了做区分建了个类
 		buttonheight=30
 		buttoncloseB.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(w-buttonheight*1))
 		buttonsmallB.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(w-buttonheight*3))
-		buttonmaxsizeB.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(w-buttonheight*2))
+		buttonwindowsB.place(bordermode='inside',height=buttonheight, width=buttonheight,x=(w-buttonheight*2))
 
 
 
-	def tk_forgetB(self,event):
-		global buttonmaxsizeA,buttoncloseA,buttonsmallA,buttonmaxsizeB,buttoncloseB,buttonsmallB
-		buttonmaxsizeB.place_forget()
+	def tk_forgetB(self):
+		global buttonmaxsizeA,buttoncloseA,buttonsmallA,buttonwindowsB,buttoncloseB,buttonsmallB
+		buttonwindowsB.place_forget()
 		buttoncloseB.place_forget()
 		buttonsmallB.place_forget()
 		buttonwidth=30
@@ -156,47 +183,64 @@ class main_windows: #只是为了做区分建了个类
 #鼠标划过 时效果
 	def changebg_maxsize(self,event):
 		global buttonmaxsizeA
-		buttonmaxsizeA['bg']='#46A3FF'
+		buttonmaxsizeA['image']=icon_maxsize_slip
 	def changebg_maxsizeB(self,event):
-		global buttonmaxsizeB
-		buttonmaxsizeB['bg']='#46A3FF'
+		global buttonwindowsB
+		buttonwindowsB['image']=icon_windows_slip
 
 	def change_close(self,event):
 		global buttoncloseA
-		buttoncloseA['bg']='#ff0000'
+		buttoncloseA['image']=icon_close_slip
 
 	def change_closeB(self,event):
 		global buttoncloseB
-		buttoncloseB['bg']='#ff0000'
+		buttoncloseB['image']=icon_close_slip
 
 	def change_small(self,event):
 		global buttonsmallA
-		buttonsmallA['bg']='#46A3FF'
+		buttonsmallA['image']=icon_minsize_slip
 
 	def change_smallB(self,event):
 		global buttonsmallB
-		buttonsmallB['bg']='#46A3FF'
+		buttonsmallB['image']=icon_minsize_slip
 
 #鼠标按完后恢复
 	def changebg2(self,event):
-		global buttonmaxsizeA,buttoncloseA,buttonsmallA,buttonmaxsizeB,buttoncloseB,buttonsmallB
-		buttonmaxsizeA['bg']=color1
-		buttoncloseA['bg']=color1
-		buttonsmallA['bg']=color1
-		buttonmaxsizeB['bg']=color1
-		buttoncloseB['bg']=color1
-		buttonsmallB['bg']=color1
+		global buttonmaxsizeA,buttoncloseA,buttonsmallA
+		buttonmaxsizeA['image']=icon_maxsize
+		buttoncloseA['image']=icon_close
+		buttonsmallA['image']=icon_minsize
+	def changebg3(self,event):
+		global buttonwindowsB,buttoncloseB,buttonsmallB
+		buttonwindowsB['image']=icon_windows
+		buttoncloseB['image']=icon_close
+		buttonsmallB['image']=icon_minsize
 #按下效果
 	def click_close(self,event):
 		global buttoncloseA
-		buttoncloseA['bg']='#46A3FF'
+		buttoncloseA['image']=icon_close_push
 	def click_closeB(self,event):
 		global buttoncloseB
-		buttoncloseB['bg']='#46A3FF'
+		buttoncloseB['image']=icon_close_push
+	def click_minisizeS(self,event):
+		global buttonsmallA
+		buttonsmallA['image']=icon_minsize_push
+	def click_minisizeB(self,event):
+		global buttonsmallB
+		buttonsmallB['image']=icon_minsize_push
+
+	def click_maxsize(self,event):
+		global buttonmaxsizeA
+		buttonmaxsizeA['image']=icon_maxsize_push
+
+	def click_windows(self,event):
+		global buttonwindowsB
+		buttonwindowsB['image']=icon_windows_push
 
 
 
-#移动窗口 
+
+#移动窗口
 	def move(self,event):
 		global x,y
 		new_x = (event.x-x)+root.winfo_x()
@@ -236,7 +280,7 @@ class tester_frame:
 
 #测试模块功能按钮 每个功能有自己界面 所以我每个独立出一个类来调用
 color1='white' #基本要色
-color2='#c7c7c7' #划过时候颜色 仅限于非主题框按钮
+color2='#46A3FF' #划过时候颜色 仅限于非主题框按钮
 color3='#656565' #按下时候颜色 仅限于非主题框按钮
 wordcolor='black'
 widthz=30
