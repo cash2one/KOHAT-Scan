@@ -17,7 +17,13 @@ ttk.Style().configure("CB.TButton", padding=0, relief="flat",
 3.子窗口内布局 迟点详细画 先弄到基础部件和父窗口布局
 参考界面 github
 
-
+如果想要 按钮按完后有固定颜色还需要想想办法 因为如果仅仅依靠enter和leave这两事件还是很难弄的 这就涉及到优先级的问题了  我开始是思路是
+先保持事件不变 当按下按钮时候 enter和leave失效 所以enter和leave要独立出一个函数 然后
+if bg==按下去的颜色:
+	不执行 独立事件函数
+else:
+	执行独立事件函数
+所以颜色要各自独立
 
 界面切换 部件是方法 place_forget() → place() →place_forget()  意思就是隐藏重现隐藏重现真特么神奇 饱读教程并实践才是道理啊
 
@@ -280,8 +286,8 @@ class tester_frame:
 
 #测试模块功能按钮 每个功能有自己界面 所以我每个独立出一个类来调用
 color1='white' #基本要色
-color2='#46A3FF' #划过时候颜色 仅限于非主题框按钮
-color3='#656565' #按下时候颜色 仅限于非主题框按钮
+color2='#cccccc' #划过时候颜色 仅限于非主题框按钮
+color3='#46A3FF' #按下时候颜色 仅限于非主题框按钮
 wordcolor='black'
 widthz=30
 heightz=220
@@ -502,6 +508,26 @@ class poc_test:
 	def color2(self,event):
 		global button_xss_injection
 		button_poc_test['bg']=color1
+
+
+#用于界面优化功能 详情看前面的流程
+def click_testerpart():
+	global button_Xpath_injection,button_SSRF,button_sql_injection,button_Json_injection,button_poc_test,button_HTTP_header_pollute
+	global button_Logical_vulnerability,button_xss_injection,button_Xml_injection,button_ftp_weak_password,button_Arbitrary_file_downloa_or_upload
+	global buttonk
+	button_Xpath_injection['bg']=color1
+	button_SSRF['bg']=color1
+	button_sql_injection['bg']=color1
+	button_Json_injection['bg']=color1
+	button_poc_test['bg']=color1
+	button_HTTP_header_pollute['bg']=color1
+	button_Logical_vulnerability['bg']=color1
+	button_xss_injection['bg']=color1
+	button_Xml_injection['bg']=color1
+	button_ftp_weak_password['bg']=color1
+	button_Arbitrary_file_downloa_or_upload['bg']=color1
+	buttonk['bg']=color1
+
 
 
 
