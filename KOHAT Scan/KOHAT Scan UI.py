@@ -17,6 +17,25 @@ ttk.Style().configure("CB.TButton", padding=0, relief="flat",
 3.子窗口内布局 迟点详细画 先弄到基础部件和父窗口布局
 参考界面 github
 
+项目更改我打算采用选项的方式来启动渗透功能
+左侧栏将只有四大功能布局
+kohatspider(在功能按钮下将会列出正在执行或已经完成的任务 完成的任务将会显示灰色 正在执行的任务将会是浅蓝色 完成但未查看的按钮是红色或深蓝色)
+comobox+treeview+scrollbar
+
+渗透功能(在功能按钮下将会列出正在执行或已经完成的任务 完成的任务将会显示灰色 正在执行的任务将会是浅蓝色 完成但未查看的按钮是红色或深蓝色)
+treeview+notebook(看情况因为有左侧显示可能不用notebook功能)+scrollbar+comobox
+
+
+信息收集
+listbox+comobox+text或Lable
+
+
+设置
+设置功能可能要弄的比较多 这功能要设置爬虫策略(爬行间隔 过滤那些网址等)这就要用选项+textbox
+渗透功能的检测项 开启哪些关闭哪些
+窗口大小 是否置顶
+还可以设置bypass语句文件路径 poc文件路径
+
 
 界面切换 部件是方法 place_forget() → place() →place_forget() 或者destroy  意思就是隐藏重现隐藏重现真特么神奇 饱读教程并实践才是道理啊
 
@@ -271,7 +290,7 @@ color1='white' #基本要色
 color2='#cccccc' #划过时候颜色 仅限于非主题框按钮
 color3='#46A3FF' #按下时候颜色 仅限于非主题框按钮
 wordcolor='black'
-widthz=30
+widthz=40
 heightz=220
 fontsize=None
 
@@ -281,7 +300,7 @@ class KOHAT_spider:
 		buttonk=Tkinter.Button(root, text='KOHAT spider', command=KOHAT_spider().functional_module_spider,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
 		buttonk.bind('<Enter>',self.color)
 		buttonk.bind('<Leave>',self.color2)
-		buttonk.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*2-20))
+		buttonk.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*2-40))
 
 	def color(self,event):
 		global buttonk
@@ -306,298 +325,114 @@ class KOHAT_spider:
 		Spider_entry=Tkinter.Entry(frame,bd=0)
 		Spider_entry.place()
 
-class sql_injection:
-	def sql_injection(self):
-		global button_sql_injection
-		button_sql_injection=Tkinter.Button(root, text='sql injection', command=sql_injection().functional_module_sql,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
-		button_sql_injection.bind('<Enter>',self.color)
-		button_sql_injection.bind('<Leave>',self.color2)
-		button_sql_injection.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*3-20))
+class test_part:
+	def test_part(self):
+		global tester
+		tester=Tkinter.Button(root, text='Tester', command=test_part().functional_module_tester,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
+		tester.bind('<Enter>',self.color)
+		tester.bind('<Leave>',self.color2)
+		tester.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*6-20))
+
 
 	def color(self,event):
-		global button_sql_injection
-		if not button_sql_injection['bg']==color3:
-			button_sql_injection['bg']=color2
-		else:
-			pass
-			
-
-	def color2(self,event):
-		global button_sql_injection
-		if not button_sql_injection['bg']==color3:
-			button_sql_injection['bg']=color1
-		else:
-			pass
-	def functional_module_sql(self):
-		global button_sql_injection
-		click_testerpart()
-		button_sql_injection['bg']=color3
-
-		
-
-
-class xss_injection:	
-	def xss_injection(self):
-		global button_xss_injection
-		button_xss_injection=Tkinter.Button(root, text='xss injection', command=xss_injection().functional_module_xss,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_xss_injection.bind('<Enter>',self.color)
-		button_xss_injection.bind('<Leave>',self.color2)
-		button_xss_injection.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*4-20))
-
-	def color(self,event):
-		global button_xss_injection
-		if not button_xss_injection['bg']==color3:
-			button_xss_injection['bg']=color2
+		global tester
+		if not tester['bg']==color3:
+			tester['bg']=color2
 		else:
 			pass
 
 	def color2(self,event):
-		global button_xss_injection
-		if not button_xss_injection['bg']==color3:
-			button_xss_injection['bg']=color1
+		global tester
+		if not tester['bg']==color3:
+			tester['bg']=color1
 		else:
 			pass
 
-	def functional_module_xss(self):
-		global button_xss_injection
+	def  functional_module_tester(self):
+		global tester
 		click_testerpart()
-		button_xss_injection['bg']=color3
+		tester['bg']=color3
 
+	def tester_part(self):
+		pass
 
-class ftp_weak_password:
-	def ftp_weak_password(self):
-		global button_ftp_weak_password
-		button_ftp_weak_password=Tkinter.Button(root, text='ftp weak password', command=ftp_weak_password().functional_module_ftp,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_ftp_weak_password.bind('<Enter>',self.color)
-		button_ftp_weak_password.bind('<Leave>',self.color2)
-		button_ftp_weak_password.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*5-20))
+class information_collect:
+	def information_collect(self):
+		global information_collecter
+		information_collecter=Tkinter.Button(root, text='information', command=information_collect().functional_module_information_collecter,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
+		information_collecter.bind('<Enter>',self.color)
+		information_collecter.bind('<Leave>',self.color2)
+		information_collecter.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*10-20))
+
 
 	def color(self,event):
-		global button_ftp_weak_password
-		if not button_ftp_weak_password['bg']==color3:
-			button_ftp_weak_password['bg']=color2
+		global information_collecter
+		if not information_collecter['bg']==color3:
+			information_collecter['bg']=color2
 		else:
 			pass
 
 	def color2(self,event):
-		global button_ftp_weak_password
-		if not button_ftp_weak_password['bg']==color3:
-			button_ftp_weak_password['bg']=color1
+		global information_collecter
+		if not information_collecter['bg']==color3:
+			information_collecter['bg']=color1
 		else:
 			pass
-	def functional_module_ftp(self):
-		global button_ftp_weak_password
+
+	def  functional_module_information_collecter(self):
+		global information_collecter
 		click_testerpart()
-		button_ftp_weak_password['bg']=color3
+		information_collecter['bg']=color3
+
+	def tester_part(self):
+		pass
 
 
 
-class SSRF:	
-	def SSRF(self):
-		global button_SSRF
-		button_SSRF=Tkinter.Button(root, text='SSRF', command=SSRF().functional_module_SSRF,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
-		button_SSRF.bind('<Enter>',self.color)
-		button_SSRF.bind('<Leave>',self.color2)
-		button_SSRF.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*6-20))
+class opinion:
+	def opinion(self):
+		global opinion
+		opinion=Tkinter.Button(root, text='opinion', command=opinion().functional_module_opinion,bg=color1,relief='flat',bd=0,fg=wordcolor,activebackground=color3,font=fontsize)
+		opinion.bind('<Enter>',self.color)
+		opinion.bind('<Leave>',self.color2)
+		opinion.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*11-20))
+
 
 	def color(self,event):
-		global button_SSRF
-		if not button_SSRF['bg']==color3:
-			button_SSRF['bg']=color2
+		global opinion
+		if not opinion['bg']==color3:
+			opinion['bg']=color2
 		else:
 			pass
+
 	def color2(self,event):
-		global button_SSRF
-		if not button_SSRF['bg']==color3:
-			button_SSRF['bg']=color1
+		global opinion
+		if not opinion['bg']==color3:
+			opinion['bg']=color1
 		else:
 			pass
-	def functional_module_SSRF(self):
-		global button_SSRF
+
+	def  functional_module_opinion(self):
+		global opinion
 		click_testerpart()
-		button_SSRF['bg']=color3
+		opinion['bg']=color3
 
-class Logical_vulnerability:	
-	def Logical_vulnerability(self):
-		global button_Logical_vulnerability
-		button_Logical_vulnerability=Tkinter.Button(root, text='Logical vulnerability', command=Logical_vulnerability().functional_module_LV,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_Logical_vulnerability.bind('<Enter>',self.color)
-		button_Logical_vulnerability.bind('<Leave>',self.color2)
-		button_Logical_vulnerability.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*7-20))
+	def tester_part(self):
+		pass
 
-	def color(self,event):
-		global button_Logical_vulnerability
-		if not button_Logical_vulnerability['bg']==color3:
-			button_Logical_vulnerability['bg']=color2
-		else:pass;
-	def color2(self,event):
-		global button_xss_injection
-		if not button_Logical_vulnerability['bg']==color3:
-			button_Logical_vulnerability['bg']=color1
-		else:pass;
-
-	def functional_module_LV(self):
-		global button_Logical_vulnerability
-		click_testerpart()
-		button_Logical_vulnerability['bg']=color3
-
-class Arbitrary_file_download_or_upload:	
-	def Arbitrary_file_download_or_upload(self):
-		global button_Arbitrary_file_downloa_or_upload
-		button_Arbitrary_file_downloa_or_upload=Tkinter.Button(root, text='Arbitraryd down/up', command=Arbitrary_file_download_or_upload().functional_module_AFDOU,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_Arbitrary_file_downloa_or_upload.bind('<Enter>',self.color)
-		button_Arbitrary_file_downloa_or_upload.bind('<Leave>',self.color2)
-		button_Arbitrary_file_downloa_or_upload.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*8-20))
-
-	def color(self,event):
-		global button_Arbitrary_file_downloa_or_upload
-		if not button_Arbitrary_file_downloa_or_upload['bg']==color3:
-			button_Arbitrary_file_downloa_or_upload['bg']=color2
-		else:pass;
-
-	def color2(self,event):
-		global button_Arbitrary_file_downloa_or_upload
-		if not button_Arbitrary_file_downloa_or_upload['bg']==color3:
-			button_Arbitrary_file_downloa_or_upload['bg']=color1
-		else:pass;
-
-	def functional_module_AFDOU(self):
-		global button_Arbitrary_file_downloa_or_upload
-		click_testerpart()
-		button_Arbitrary_file_downloa_or_upload['bg']=color3
-
-class Xpath_injection:	
-	def Xpath_injection(self):
-		global button_Xpath_injection
-		button_Xpath_injection=Tkinter.Button(root, text='Xpath injection', command=Xpath_injection().functional_module_Xpath,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_Xpath_injection.bind('<Enter>',self.color)
-		button_Xpath_injection.bind('<Leave>',self.color2)
-		button_Xpath_injection.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*9-20))
-
-	def color(self,event):
-		global button_Xpath_injection
-		if not button_Xpath_injection['bg']==color3:
-			button_Xpath_injection['bg']=color2
-		else:pass;
-
-	def color2(self,event):
-		global button_Xpath_injection
-		if not button_Xpath_injection['bg']==color3:
-			button_Xpath_injection['bg']=color1
-		else:pass;
-
-	def functional_module_Xpath(self):
-		global button_Xpath_injection
-		click_testerpart()
-		button_Xpath_injection['bg']=color3
-
-
-class Xml_injection:	
-	def Xml_injection(self):
-		global button_Xml_injection
-		button_Xml_injection=Tkinter.Button(root, text='Xml injection', command=Xml_injection().functional_module_Xml,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_Xml_injection.bind('<Enter>',self.color)
-		button_Xml_injection.bind('<Leave>',self.color2)
-		button_Xml_injection.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*10-20))
-
-	def color(self,event):
-		global button_Xml_injection
-		if not button_Xml_injection['bg']==color3:
-			button_Xml_injection['bg']=color2
-		else:pass;
-
-	def color2(self,event):
-		global button_Xml_injection
-		if not button_Xml_injection['bg']==color3:
-			button_Xml_injection['bg']=color1
-		else:pass;
-
-	def functional_module_Xml(self):
-		global button_Xml_injection
-		click_testerpart()
-		button_Xml_injection['bg']=color3
-
-class Json_injection:	
-	def Json_injection(self):
-		global button_Json_injection
-		button_Json_injection=Tkinter.Button(root, text='Json injection', command=Json_injection().functional_module_Json,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_Json_injection.bind('<Enter>',self.color)
-		button_Json_injection.bind('<Leave>',self.color2)
-		button_Json_injection.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*11-20))
-
-	def color(self,event):
-		global button_Json_injection
-		if not button_Json_injection['bg']==color3:
-			button_Json_injection['bg']=color2
-		else:pass;
-
-	def color2(self,event):
-		global button_Json_injection
-		if not button_Json_injection['bg']==color3:
-			button_Json_injection['bg']=color1
-		else:pass;
-
-	def functional_module_Json(self):
-		global button_Json_injection
-		click_testerpart()
-		button_Json_injection['bg']=color3
-
-class HTTP_header_pollute:	
-	def HTTP_header_pollute(self):
-		global button_HTTP_header_pollute
-		button_HTTP_header_pollute=Tkinter.Button(root, text='HTTP header pollute', command=HTTP_header_pollute().functional_module_HTTP,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_HTTP_header_pollute.bind('<Enter>',self.color)
-		button_HTTP_header_pollute.bind('<Leave>',self.color2)
-		button_HTTP_header_pollute.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*12-20))
-
-	def color(self,event):
-		global button_HTTP_header_pollute
-		if not button_HTTP_header_pollute['bg']==color3:
-			button_HTTP_header_pollute['bg']=color2
-		else:pass;
-
-	def color2(self,event):
-		global button_HTTP_header_pollute
-		if not button_HTTP_header_pollute['bg']==color3:
-			button_HTTP_header_pollute['bg']=color1
-		else:pass;
-	def functional_module_HTTP(self):
-		global button_HTTP_header_pollute
-		click_testerpart()
-		button_HTTP_header_pollute['bg']=color3
-
-
-class poc_test:	
-	def poc_test(self):
-		global button_poc_test
-		button_poc_test=Tkinter.Button(root, text='poc_test', command=poc_test().functional_module_POC,bg=color1,relief='flat',bd=0,activebackground=color3,fg=wordcolor,font=fontsize)
-		button_poc_test.bind('<Enter>',self.color)
-		button_poc_test.bind('<Leave>',self.color2)
-		button_poc_test.place(bordermode='inside',height=widthz, width=heightz,y=(widthz*13-20))
-
-
-	def color(self,event):
-		global button_poc_test
-		if not button_poc_test['bg']==color3:
-			button_poc_test['bg']=color2
-		else:pass;
-
-	def color2(self,event):
-		global button_xss_injection
-		if not button_poc_test['bg']==color3:
-			button_poc_test['bg']=color1
-		else:pass;
-	def functional_module_POC(self):
-		global button_poc_test
-		click_testerpart()
-		button_poc_test['bg']=color3
 
 
 #用于界面优化功能 详情看前面的流程
 def click_testerpart():
+	'''
 	global button_Xpath_injection,button_SSRF,button_sql_injection,button_Json_injection,button_poc_test,button_HTTP_header_pollute
 	global button_Logical_vulnerability,button_xss_injection,button_Xml_injection,button_ftp_weak_password,button_Arbitrary_file_downloa_or_upload
-	global buttonk
+	'''
+	global buttonk,tester,information_collecter
+	opinion['bg']=color1
+	tester['bg']=color1
+	information_collecter['bg']=color1
+	'''
 	button_Xpath_injection['bg']=color1
 	button_SSRF['bg']=color1
 	button_sql_injection['bg']=color1
@@ -609,13 +444,17 @@ def click_testerpart():
 	button_Xml_injection['bg']=color1
 	button_ftp_weak_password['bg']=color1
 	button_Arbitrary_file_downloa_or_upload['bg']=color1
+	'''
 	buttonk['bg']=color1
-
-
 
 
 def start_test_button():
 	KOHAT_spider().kohat_spider()
+	test_part().test_part()
+	information_collect().information_collect()
+	opinion().opinion()
+
+	'''
 	sql_injection().sql_injection()
 	xss_injection().xss_injection()
 	ftp_weak_password().ftp_weak_password()
@@ -627,7 +466,7 @@ def start_test_button():
 	Json_injection().Json_injection()
 	HTTP_header_pollute().HTTP_header_pollute()
 	poc_test().poc_test()
-
+'''
 
 
 if __name__ == '__main__':

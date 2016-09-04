@@ -1,0 +1,49 @@
+a{text-decoration:none;
+}
+span.site-title{
+position:absolute;
+left:70px;
+top:20px;
+color:#4d4a57;
+font-weight:600;
+}
+span.site-title:link{
+  color:black;}  
+span.site-title:visited{
+  color:black;}  
+span.site-title:hover{
+  color:#85c6ea;}  
+span.site-title:active{
+  color:black;} 
+
+
+
+a.main-link{
+  position: relative;
+  left:150px;
+  top:20px;
+  padding:20px;/*main-link属性的部件相对距离*/
+}
+a.main-link:link {color:black;} /* 未访问链接*/
+a.main-link:visited {color:black;}/* 已访问链接 */
+a.main-link:hover {color:#85c6ea;}/* 鼠标移动到链接上 */
+a.main-link:active {color:black;}/* 已访问过的链接 */ 
+
+header{
+  height: 60px;
+}
+
+/*渐变分割线*/
+#grad1 {
+    height: 5px;
+    background: -webkit-linear-gradient(left, red , blue); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, red, blue); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, red, blue); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, red , blue); /* 标准的语法（必须放在最后） */
+}
+
+
+
+a.blank{
+  color:#00ffff;
+}
