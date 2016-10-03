@@ -8,6 +8,7 @@ from multiprocessing import Pool
 import os,sys
 import os.path
 import Queue
+from multiprocessing.dummy import Pool
 
 
 send_headers = {
@@ -38,7 +39,7 @@ def local_url_get():#获取本地BAIDU-URL SPIDER抓取到的搜索结果的Url
 
 
 
-def get_page_url(Url,Nones):#获取页面内的所有活的Url
+def get_page_url(Url):#获取页面内的所有活的Url
 	'''[a-zA-z]+://[^"]* 此正则可以匹配任何处于页面下的Url'''
 	fliters=[]
 	fliter1=[]
@@ -190,12 +191,15 @@ def  threadingpoools(into_url):
 
 
 def multiprocessingpool(URLlist):
-	pool = Pool(20)
-	for i in URLlist:
-		result.append(pool.apply(threadingpoools,URLlist))
-		pool.close()
-		pool.join()	
+	Pools=Pool(16)
+	Urlists=[]
+	Urlists.append(URLlist)
+	if not str(type(URLlist))=="<type 'list'>":
+		Pools.map(get_page_url,Urlists)
+		Pools.close()
 
+def multiprocessings(URLlist):
+	pass
 
 
 def result_writein(info):#感觉应该在全部完成后再调用
@@ -222,7 +226,7 @@ def run(domainurl):
 	result2=[]
 	differences=[]
 	origin = list(set(threading.enumerate()))
-	threadingpoools(domainurl)
+	multiprocessingpool(domainurl)
 	time.sleep(2)
 	#所有线程都完成后也要等q和Q空了后才能退出 这意味着要3个都是false才能退出 有一个true就得进行
 	while  not q.empty() or not Q.empty():#not list(set(threading.enumerate()))==origin or
@@ -230,8 +234,7 @@ def run(domainurl):
 		differences.append(Q.get())
 		if not len(list(set(differences).difference(set(result2))))==0:
 			different=list(set(differences).difference(set(result2)))
-			threadingpoools(different)
-			print different
+			multiprocessingpool(different)
 		else:
 			pass
 		result2.append(q.get())
@@ -245,4 +248,6 @@ def read_conf():
 
 if __name__ == '__main__':
 	for task in local_url_get():
-		multiprocessingpool(run(i))
+		pass
+		multiprocessing()
+	run("http://kcorlidy.github.io/")

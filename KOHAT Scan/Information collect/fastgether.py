@@ -6,13 +6,25 @@ import os
 import threading
 import Queue
 import getopt
+import random
+from multiprocessing.dummy import Pool
+
 #write by kcorlidy  it uses to gether top board;information of website(domains,the weight) 
 
-send_headers = {
- 'User-Agent':'Mozilla/5.0 (Windows NT 6.2; rv:16.0) Gecko/20160901 Firefox/49.0',
+send_headers = [{
+ 'User-Agent':'Mozilla/5.0 (Windows NT 6.2; rv:49.0) Gecko/20100101 Firefox/49.0',
  'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
  'Connection':'keep-alive'
 }
+,
+ {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0',
+ 'Accept':'*/*',
+ 'Connection':'keep-alive'
+},
+{'User-Agent':"Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.154 Safari/537.36 LBBROWSER",
+ 'Accept':'*/*',
+ 'Connection':'keep-alive'
+}]
 
 li=['http://top.chinaz.com/hangye/index_yule.html','http://top.chinaz.com/hangye/index_shopping.html',
 	'http://top.chinaz.com/hangye/index_gov.html','http://top.chinaz.com/hangye/index_jiaoyu.html',
@@ -22,7 +34,7 @@ li=['http://top.chinaz.com/hangye/index_yule.html','http://top.chinaz.com/hangye
 	'http://top.chinaz.com/hangye/index_news.html']
 
 Q=Queue.Queue()
-
+max_basetime=4
 #gether all kind of toplist 
 def gather_the_top_type_in_the_kind():
 	global dictQ
@@ -60,42 +72,7 @@ def gather_what_kind_of_toplist_you_wander(info_toplist):
 			re_urls=re.findall(r"col-gray[^]*[^<():]*",DOMs)[1:]
 			re_urls_fliter=[str(each[10:]) for each in re_urls]
 			print re_urls_fliter
-			for Qx in re_urls_fliter:
-				Reqx = urllib2.Request("http://rank.chinaz.com/?host="+str(Qx),headers=send_headers)
-				Pagex = urllib2.urlopen(Reqx,timeout=15)
-				DOMx=Pagex.read()
 
-				#website weight and Subdomain
-				re_information_Subdomain=[ismd[29:] for ismd in re.findall(r"http://rank.chinaz.com/.host.[^]*[^>]*",DOMx) if ismd.find(Qx)>0 and ismd.find('Type')<0] # it is domains !
-				re_information_weight=[weight[0:weight.find("<")-1]+" "+weight[weight.find('>')+1:] for weight in re.findall(r"\w*.<i id[^]*[<]*",DOMx)] #it is weight !
-				
-				#website IP adress,physical_address
-				ReqY = urllib2.Request("http://ip.chinaz.com/?ip="+str(Qx),headers=send_headers)
-				PageY = urllib2.urlopen(ReqY,timeout=15)
-				DOMY=PageY.read()
-
-				re_website_IP_address=[ip[24:] for ip in re.findall(r"class=.Whwtdhalf w15-0.[^]*[<]*",DOMY)[2:] if ip.find(".")>0 and not ip.find(Qx)>0] #get ip adress 
-				re_website_physical_address=[phy[7:] for phy in re.findall(r'w50-0.{2}[^]*[<]*',DOMY)] #physical_address
-				
-				#which website under the same IP adress
-				ReqZ = urllib2.Request("http://ip.chinaz.com/Same/?s="+str(Qx),headers=send_headers)
-				PageZ = urllib2.urlopen(ReqZ,timeout=15)
-				DOMZ=PageZ.read()
-
-				re_under_same_IP_adress=[Z[18:] for Z in re.findall(r"overhid.{3}a href.{2}[^]*[^']*",DOMZ)]
-				
-			
-				weight_name=['baidu weight','keywords','IP flow']
-				result_files=open(str(Qx)+str(time.ctime().replace(":","_"))+'.md','w+')
-				for weights in range(len(re_information_weight)-1):
-					result_files.write(weight_name[weights]+":"+re_information_weight[weights]+"\n")
-				for ip_adress in range(len(re_website_physical_address)-1):
-					result_files.write(re_website_IP_address[ip_adress]+"  "+re_website_physical_address[ip_adress+1]+"\n")
-				for Subdomains in range(len(re_information_Subdomain)):
-					result_files.write(re_information_Subdomain[Subdomains]+"\n")
-				for same_IP in re_under_same_IP_adress:
-					result_files.write(same_IP+"\n")
-				result_files.close()
 
 
 
@@ -104,48 +81,93 @@ def gather_what_kind_of_toplist_you_wander(info_toplist):
 #i dont know how to judge  path or url
 def gather_each_Urls_informatin(info_website):
 	#for each Urls info and gather information
+	print info_website
 	if 1:
-			for Qx in info_website:
-				Reqx = urllib2.Request("http://rank.chinaz.com/?host="+str(Qx),headers=send_headers)
-				Pagex = urllib2.urlopen(Reqx,timeout=15)
-				DOMx=Pagex.read()
+			if 1:
+				base_time=2
+				re_information_Subdomain=[]
+				re_information_weight=[]
+				re_website_IP_address=[]
+				re_website_physical_address=[]
+				re_under_same_IP_adress=[]
+				DOMx=""
+				DOMY=""
+				DOMZ=""
+				try:
+					Reqx = urllib2.Request("http://rank.chinaz.com/?host="+str(info_website),headers=send_headers[int(random.randint(0,2))])
+					Pagex = urllib2.urlopen(Reqx,timeout=15)
+					DOMx=Pagex.read()
+				except Exception,e:
+					if e=="<urlopen error [Errno 10060] >":
+							time.sleep(base_time)
+							if base_time<max_basetime:
+								base_time+=1
 
 				#website weight and Subdomain
-				re_information_Subdomain=[ismd[29:-1] for ismd in re.findall(r"http://rank.chinaz.com/.host.[^]*[^>]*",DOMx) if ismd.find(Qx)>0 and ismd.find('Type')<0] # it is domains !
+				re_information_Subdomain=[ismd[8:] for ismd in re.findall(r"qq.com.{2}[^<]*",DOMx) if ismd[8:].find(info_website)>=0] # it is domains !
 				re_information_weight=[weight[0:weight.find("<")-1]+" "+weight[weight.find('>')+1:] for weight in re.findall(r"\w*.<i id[^]*[<]*",DOMx)] #it is weight !
 				
 				#website IP adress,physical_address
-				ReqY = urllib2.Request("http://ip.chinaz.com/?ip="+str(Qx),headers=send_headers)
-				PageY = urllib2.urlopen(ReqY,timeout=15)
-				DOMY=PageY.read()
+				while len(DOMY)<5000:
+					try:
+						time.sleep(1)
+						ReqY = urllib2.Request("http://ip.chinaz.com/?ip="+str(info_website),headers=send_headers[int(random.randint(0,2))])
+						PageY = urllib2.urlopen(ReqY,timeout=15)
+						DOMY=PageY.read()
+					except Exception,e:
+						print "Part Y error:",e
+						if str(e)=="<urlopen error [Errno 10060] >":
+							continue
+							time.sleep(base_time)
+							if base_time<max_basetime:
+								base_time+=1
 
-				re_website_IP_address=[ip[24:] for ip in re.findall(r"class=.Whwtdhalf w15-0.[^]*[<]*",DOMY)[2:] if ip.find(".")>0 and not ip.find(Qx)>0] #get ip adress 
+				re_website_IP_address=[ip[24:] for ip in re.findall(r"class=.Whwtdhalf w15-0.[^]*[<]*",DOMY)[2:] if ip.find(".")>0 and not ip.find(info_website)>0] #get ip adress 
 				re_website_physical_address=[phy[7:] for phy in re.findall(r'w50-0.{2}[^]*[<]*',DOMY)] #physical_address
 				
 				#which website under the same IP adress
-				ReqZ = urllib2.Request("http://ip.chinaz.com/Same/?s="+str(Qx),headers=send_headers)
-				PageZ = urllib2.urlopen(ReqZ,timeout=15)
-				DOMZ=PageZ.read()
-
+				while len(DOMZ)<3000:
+					try:
+						time.sleep(1)
+						ReqZ = urllib2.Request("http://s.tool.chinaz.com/same?s="+str(info_website)+"&page=1",headers=send_headers[int(random.randint(0,2))])
+						PageZ = urllib2.urlopen(ReqZ,timeout=20)
+						DOMZ=PageZ.read()
+					except Exception,e:
+						print "Part Z error:",e
+						if base_time<max_basetime:
+								base_time+=1
+						if str(e)=="<urlopen error [Errno 10060] >":
+							continue
+							time.sleep(base_time)
+					
 				re_under_same_IP_adress=[Z[18:] for Z in re.findall(r"overhid.{3}a href.{2}[^]*[^']*",DOMZ)]
 
 				
-				print re_information_weight
-				print re_website_IP_address
-				print re_website_physical_address
-				print re_information_Subdomain
-				print re_under_same_IP_adress
+				print len(re_information_weight)
+				print len(re_website_IP_address)
+				print len(re_website_physical_address)
+				print len(re_information_Subdomain)
+				print len(re_under_same_IP_adress)
+				print len(DOMZ),len(DOMY),len(DOMx)
 				#print len(DOMZ),len(DOMY)
 				#print len(re.findall(r"overhid.{3}a href.{2}[^]*[^']*",DOMZ))
 
 				weight_name=['baidu weight','keywords','IP flow']
-				result_files=open(str(Qx)+str(time.ctime().replace(":","_"))+'.md','w+')
-				for weights in range(len(re_information_weight)-1):
+				result_files=open(str(info_website)+" "+str(time.ctime().replace(":","_"))+'.md','w+')
+
+				result_files.write("information weight"+"\n")
+				for weights in range(len(re_information_weight)-1):	
 					result_files.write(weight_name[weights]+":"+re_information_weight[weights]+"\n")
+
+				result_files.write("\n"*3+"website IP adress and its physical address"+"\n")
 				for ip_adress in range(len(re_website_physical_address)-1):
 					result_files.write(re_website_IP_address[ip_adress]+"  "+re_website_physical_address[ip_adress+1]+"\n")
+
+				result_files.write("\n"*3+"its Subdomains"+"\n")
 				for Subdomains in range(len(re_information_Subdomain)):
 					result_files.write(re_information_Subdomain[Subdomains]+"\n")
+
+				result_files.write("\n"*3+"what else website under the IP adress[target website ip adress]"+"\n"+"http://s.tool.chinaz.com/same?s="+str(info_website)+"&page=1"+"\n")
 				for same_IP in re_under_same_IP_adress:
 					result_files.write(same_IP+"\n")
 				result_files.close()
@@ -154,7 +176,6 @@ def gather_each_Urls_informatin(info_website):
 
 
 def auto_function(info):
-	templist=[]
 	try:
 		opts, args = getopt.getopt(info,"hu:p:t:",["toplist=","path=","url="])
 	except getopt.GetoptError:
@@ -169,35 +190,52 @@ def auto_function(info):
 			gather_what_kind_of_toplist_you_wander(outfo)
 		elif opt in ("-p", "--path"):
 			outfo = arg
-			filex=open(outfo,'r+')
-			info_page=[lists.strip() for lists in filex.readlines()]
-			filex.close()
-			gather_each_Urls_informatin(info_page)
+			try:
+				filex=open(info,'r+')
+				info_page=[lists.strip() for lists in filex.readlines()]
+				filex.close()
+				processing_Dummy(info_page)
+			except Exception,e:
+				print (e)
 		elif opt in ("-u", "--url"):
 			outfo = arg
-			templist.append(outfo)
-			if len(templist)>0:
-				gather_each_Urls_informatin(templist)
+			if outfo.find("http")>=0 and outfo.find("www")>=0:
+				gather_each_Urls_informatin(outfo[11:])
+			elif outfo.find("https")>=0 and outfo.find("www")>=0:
+				gather_each_Urls_informatin(outfo[12:])
+			elif outfo.find("http")>=0 and not outfo.find("www")>=0:
+				gather_each_Urls_informatin(outfo[7:])
+			elif outfo.find("https")>=0 and not outfo.find("www")>=0:
+				gather_each_Urls_informatin(outfo[8:])
+			else:
+				print ("https://www.example.com or http://www.example.com")
 
-def gather_url(info):
-	listx=[]
-	if type(info)=="<type 'list'>":
-		gather_each_Urls_informatin(info)
-	elif type(info)=="<type 'str'>":
-		if info.find("www")>0:
-			listx.append(info)
-			if len(listx)>0:
-				gather_each_Urls_informatin(listx)
-		elif not info.find("www")>0:
-			filex=open(info,'r+')
-			info_page=[lists.strip() for lists in filex.readlines()]
-			filex.close()
-			gather_each_Urls_informatin(info_page)
+def gather_url(infos):
+	if str(type(info)).find("list")>0:
+		processing_Dummy(infos)
+	elif str(type(info)).find("str")>0:
+		info=infos.strip()
+		if info.find("http")==0 and info.find("www")>=0:
+			gather_each_Urls_informatin(info[11:])
+		elif info.find("https")==0 and info.find("www")>=0:
+			gather_each_Urls_informatin(info[12:])
+		elif info.find("http")==0 and not info.find("www")>=0:
+			gather_each_Urls_informatin(info[7:])
+		elif info.find("https")==0 and not info.find("www")>=0:
+			gather_each_Urls_informatin(info[8:])
+		elif info.find(":\\")<2 and info.find(":\\")>0:
+			try:
+				filex=open(info,'r+')
+				info_page=[lists.strip() for lists in filex.readlines()]
+				filex.close()
+				processing_Dummy(info_page)
+			except Exception,e:
+				print (e)
 		else:
-			print ("error:Make sure info is str or list")
+			print ("Error Url or path")
 
 def gather_toplist(info):
-	if type(info)=="<type 'str'>":
+	if str(type(info)=="<type 'str'>"):
 		gather_what_kind_of_toplist_you_wander(info)
 	else:
 		print ("Info must be a Url")
@@ -205,11 +243,35 @@ def gather_toplist(info):
 def gather_topkind():
 	gather_the_top_type_in_the_kind()
 
+
+
+
+def processing_Dummy(info):
+	Pools=Pool(16)
+	templist=[]
+	if str(type(info))=="<type 'list'>":
+		Pools.map(gather_url,info)
+		Pools.close()
+	elif str(type(info))=="<type 'str'>":
+		templist.append(info)
+		Pools.map(gather_url,templist)
+		Pools.close()
+	else:
+		print ("error only str or list avaliable")
+
+
+	
 if __name__ == '__main__':
 	#gather_what_kind_of_toplist_you_wander('http://top.chinaz.com/hangye/index_yule.html')
 	#gather_the_top_type_in_the_kind()
+	processing_Dummy("http://www.qq.com")
 	info=sys.argv[1:]
 	auto_function(info)
+
+
+"""
+we should check out if the list was empty; yes-wait a moment; no-keep on do this
+"""
 
 """
 actually we can import an modules from our files
