@@ -1,0 +1,14 @@
+$(function()
+{
+$('.Run').click(function(){
+$.getScript('html/js/Jquery.js',function(){
+});
+});
+});
+$(function()
+{
+$('.Run').click(function(){
+$.getScript('html/js/jscript.js',function(){
+});
+});
+});

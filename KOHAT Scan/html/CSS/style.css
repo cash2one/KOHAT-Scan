@@ -1,49 +1,159 @@
-a{text-decoration:none;
+﻿/*主题背景色调*/
+
+html {
+  background-color: #252830;
 }
-span.site-title{
-position:absolute;
-left:70px;
-top:20px;
-color:#4d4a57;
-font-weight:600;
+
+
+/*控制超链接的样式*/
+
+a {
+  text-decoration: none;
 }
-span.site-title:link{
-  color:black;}  
-span.site-title:visited{
-  color:black;}  
-span.site-title:hover{
-  color:#85c6ea;}  
-span.site-title:active{
-  color:black;} 
 
-
-
-a.main-link{
+li.a-link {
+  list-style-type: none;
   position: relative;
-  left:150px;
-  top:20px;
-  padding:20px;/*main-link属性的部件相对距离*/
-}
-a.main-link:link {color:black;} /* 未访问链接*/
-a.main-link:visited {color:black;}/* 已访问链接 */
-a.main-link:hover {color:#85c6ea;}/* 鼠标移动到链接上 */
-a.main-link:active {color:black;}/* 已访问过的链接 */ 
-
-header{
-  height: 60px;
-}
-
-/*渐变分割线*/
-#grad1 {
-    height: 5px;
-    background: -webkit-linear-gradient(left, red , blue); /* Safari 5.1 - 6.0 */
-    background: -o-linear-gradient(right, red, blue); /* Opera 11.1 - 12.0 */
-    background: -moz-linear-gradient(right, red, blue); /* Firefox 3.6 - 15 */
-    background: linear-gradient(to right, red , blue); /* 标准的语法（必须放在最后） */
+  padding-top: 40px;
 }
 
 
+/*main-link属性的部件相对距离*/
 
-a.blank{
-  color:#00ffff;
+a.main-link {
+  color: #7A7A7A;
 }
+
+a.main-link:hover {
+  color: orange;
+}
+
+
+/*输入框样式*/
+input.form{
+  background-color:#434857;
+  position: absolute;
+  top: 50px;
+  left:450px;
+  width:350px;
+  height:30px;
+  border:0px;
+  border-radius:5px;
+  font-size:nomarl;
+}
+.Run{
+  background-color:#252830;
+  position: absolute;
+  top: 55.5px;
+  left: 730px;
+  border:0px;
+  border-radius:5px;
+  color:#434857;
+}
+
+
+
+/*手风琴切换 样式*/
+.accordion {
+ 	width: 100%;
+ 	max-width: 860px;
+ 	margin: 30px auto 20px;
+ 	background: #FFF;
+ 	-webkit-border-radius: 4px;
+ 	-moz-border-radius: 4px;
+ 	border-radius: 4px;
+ }
+
+.accordion .link {
+	cursor: pointer;
+	display: block;
+	padding: 15px 15px 15px 42px;
+	color: #4D4D4D;
+	font-size: 14px;
+	font-weight: 700;
+	border-bottom: 1px solid #CCC;
+	position: relative;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+.accordion li:last-child .link {
+	border-bottom: 0;
+}
+
+.accordion li i {
+	position: absolute;
+	top: 10px;
+	left: 12px;
+	font-size: 18px;
+	color: #595959;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+.accordion li i.fa-chevron-down {
+	right: 12px;
+	left: auto;
+	font-size: 16px;
+}
+
+.accordion li.open .link {
+	color: #b63b4d;
+}
+
+.accordion li.open i {
+	color: #b63b4d;
+}
+.accordion li.open i.fa-chevron-down {
+	-webkit-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+/**
+ * Submenu
+ -----------------------------*/
+ .submenu {
+ 	display: none;
+ 	background: #444359;
+ 	font-size: 14px;
+ }
+
+ .submenu li {
+ 	border-bottom: 1px solid #4b4a5e;
+ }
+
+ .submenu a {
+ 	display: block;
+ 	text-decoration: none;
+ 	color: #d9d9d9;
+ 	padding: 12px;
+ 	padding-left: 42px;
+ 	-webkit-transition: all 0.25s ease;
+ 	-o-transition: all 0.25s ease;
+ 	transition: all 0.25s ease;
+ }
+
+ .submenu a:hover {
+ 	background: #b63b4d;
+ 	color: #FFF;
+ }
+
+div.list{
+  position: absolute;
+  top: 80px;
+  left: 140px;
+  width: 1000px;
+  
+}
+
+/*参与项目人员列表*/
+
+
+/*错误提交*/
+
+
+/*项目地址*/
