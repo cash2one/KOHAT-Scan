@@ -11,23 +11,52 @@ a {
   text-decoration: none;
 }
 
+div.linkfirst{
+	position: fixed;
+	top:80px;
+	height: 100px;
+	width:60px;
+}
 li.a-link {
   list-style-type: none;
   position: relative;
-  padding-top: 40px;
+  padding-top: 20px;
+  padding-left: 0px;
+}
+.span::before{
+	font-size: 100rem;
 }
 
-
-/*main-link属性的部件相对距离*/
+/*扫描器 爬行 信息收集 样式*/
 
 a.main-link {
   color: #7A7A7A;
+  padding-left: 15px;  
 }
-
 a.main-link:hover {
   color: orange;
 }
+a.aboutus:hover{
+	color: orange;
+}
 
+/*aboubt us icon position*/
+.aboutus{
+	padding-left: 13px;
+	color: #7A7A7A;
+}
+
+
+/*home picture position*/
+.main-home{
+	padding-left: 3px;
+	height: 4px;
+}
+.hpic{
+	background-color: white;
+	border-radius: 500px;
+	height: 40px;
+}
 
 /*输入框样式*/
 input.form{
